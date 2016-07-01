@@ -1,0 +1,96 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   'materialize.css' ]
+2 info using npm@2.15.5
+3 info using node@v4.4.6
+4 verbose config Skipping project config: /home/coderschool/.npmrc. (matches userconfig)
+5 verbose install initial load of /home/coderschool/package.json
+6 verbose installManyTop reading scoped package data from /home/coderschool/node_modules/coffee-script/package.json
+7 verbose installManyTop reading scoped package data from /home/coderschool/node_modules/request/package.json
+8 verbose readDependencies loading dependencies from /home/coderschool/package.json
+9 silly cache add args [ 'materialize.css', null ]
+10 verbose cache add spec materialize.css
+11 silly cache add parsed spec Result {
+11 silly cache add   raw: 'materialize.css',
+11 silly cache add   scope: null,
+11 silly cache add   name: 'materialize.css',
+11 silly cache add   rawSpec: '',
+11 silly cache add   spec: 'latest',
+11 silly cache add   type: 'tag' }
+12 silly addNamed materialize.css@latest
+13 verbose addNamed "latest" is being treated as a dist-tag for materialize.css
+14 info addNameTag [ 'materialize.css', 'latest' ]
+15 silly mapToRegistry name materialize.css
+16 silly mapToRegistry using default registry
+17 silly mapToRegistry registry https://registry.npmjs.org/
+18 silly mapToRegistry data Result {
+18 silly mapToRegistry   raw: 'materialize.css',
+18 silly mapToRegistry   scope: null,
+18 silly mapToRegistry   name: 'materialize.css',
+18 silly mapToRegistry   rawSpec: '',
+18 silly mapToRegistry   spec: 'latest',
+18 silly mapToRegistry   type: 'tag' }
+19 silly mapToRegistry uri https://registry.npmjs.org/materialize.css
+20 verbose addNameTag registry:https://registry.npmjs.org/materialize.css not in flight; fetching
+21 verbose request uri https://registry.npmjs.org/materialize.css
+22 verbose request no auth needed
+23 info attempt registry request try #1 at 7:15:54 PM
+24 verbose request id b6557f7244db52e3
+25 http request GET https://registry.npmjs.org/materialize.css
+26 http 404 https://registry.npmjs.org/materialize.css
+27 verbose headers { 'content-type': 'application/json',
+27 verbose headers   'cache-control': 'max-age=0',
+27 verbose headers   'content-length': '2',
+27 verbose headers   'accept-ranges': 'bytes',
+27 verbose headers   date: 'Fri, 01 Jul 2016 11:15:55 GMT',
+27 verbose headers   via: '1.1 varnish',
+27 verbose headers   age: '0',
+27 verbose headers   connection: 'keep-alive',
+27 verbose headers   'x-served-by': 'cache-sjc3628-SJC',
+27 verbose headers   'x-cache': 'MISS',
+27 verbose headers   'x-cache-hits': '0',
+27 verbose headers   'x-timer': 'S1467371755.947553,VS0,VE36',
+27 verbose headers   vary: 'Accept-Encoding' }
+28 silly get cb [ 404,
+28 silly get   { 'content-type': 'application/json',
+28 silly get     'cache-control': 'max-age=0',
+28 silly get     'content-length': '2',
+28 silly get     'accept-ranges': 'bytes',
+28 silly get     date: 'Fri, 01 Jul 2016 11:15:55 GMT',
+28 silly get     via: '1.1 varnish',
+28 silly get     age: '0',
+28 silly get     connection: 'keep-alive',
+28 silly get     'x-served-by': 'cache-sjc3628-SJC',
+28 silly get     'x-cache': 'MISS',
+28 silly get     'x-cache-hits': '0',
+28 silly get     'x-timer': 'S1467371755.947553,VS0,VE36',
+28 silly get     vary: 'Accept-Encoding' } ]
+29 verbose stack Error: Registry returned 404 for GET on https://registry.npmjs.org/materialize.css
+29 verbose stack     at makeError (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+29 verbose stack     at CachingRegistryClient.<anonymous> (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:242:14)
+29 verbose stack     at Request._callback (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+29 verbose stack     at Request.self.callback (/usr/lib/node_modules/npm/node_modules/request/request.js:200:22)
+29 verbose stack     at emitTwo (events.js:87:13)
+29 verbose stack     at Request.emit (events.js:172:7)
+29 verbose stack     at Request.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:1067:10)
+29 verbose stack     at emitOne (events.js:82:20)
+29 verbose stack     at Request.emit (events.js:169:7)
+29 verbose stack     at IncomingMessage.<anonymous> (/usr/lib/node_modules/npm/node_modules/request/request.js:988:12)
+30 verbose statusCode 404
+31 verbose pkgid materialize.css
+32 verbose cwd /home/coderschool/CarebearProject/predictor/BaymaxPredictor
+33 error Linux 4.4.0-28-generic
+34 error argv "/usr/bin/nodejs" "/usr/bin/npm" "install" "materialize.css"
+35 error node v4.4.6
+36 error npm  v2.15.5
+37 error code E404
+38 error 404 Registry returned 404 for GET on https://registry.npmjs.org/materialize.css
+38 error 404
+38 error 404 'materialize.css' is not in the npm registry.
+38 error 404 You should bug the author to publish it (or use the name yourself!)
+38 error 404
+38 error 404 Note that you can also install from a
+38 error 404 tarball, folder, http url, or git url.
+39 verbose exit [ 1, true ]
