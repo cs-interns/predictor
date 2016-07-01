@@ -10,7 +10,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require static_pages.js
+//= require static_pages.coffee
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
