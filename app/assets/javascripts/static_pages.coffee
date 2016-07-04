@@ -30,6 +30,7 @@ $(document).ready ->
           columns = $.map res.compatible_frames[0].columns, (col, i) ->
             li = $ '<li>'
             li.html col.label
+            li.data 'type', col.type
             li
           item.append $('<ul>')
           item.find('ul').append columns
