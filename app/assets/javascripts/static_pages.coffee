@@ -42,6 +42,7 @@ $(document).ready ->
         finally
           $('#loading').hide()
 
+<<<<<<< 86e5322d646c0556fdc6d8cc6be073338031f903
   $('#frame-view').on 'click', ->
     $.getJSON url + '/3/Frames', (result) ->
       console.log result
@@ -58,3 +59,71 @@ $(document).ready ->
     key = $(@).data('name')
     $.getJSON url + '/4/Frames/' + key, (result) ->
       console.log(result)
+=======
+  $('form input').on 'change', () ->
+    # preview file
+
+  $('form button').on 'click', (e) ->
+    if $(this).siblings('input')[0].files.length == 0
+      return false
+    upload = uploadFile()
+    upload.done (response) ->
+      # parse
+      parseFrame 'uploaded.hex'
+    return false;
+
+guessParseParams = (frameName) ->
+  $.ajax
+    url: 'http://139.59.249.87/3/ParseSetup'
+    method: 'post'
+    data:
+      source_frames: "[\"#{frameName}\"]"
+
+prepareArrayForPost = (obj, key) ->
+  data = $.map obj[key], (item, index) ->
+    "\"#{item}\""
+  data = data.join(',')
+  "[#{data}]"
+
+parseFrame = (frameName) ->
+  guess = guessParseParams(frameName)
+  guess.done (params) ->
+
+    # delete some params, server errors out with these params
+    exclude_params = [
+      'data'
+      'header_lines'
+      'total_filtered_column_count'
+      'warnings'
+      'na_strings'
+      '__meta'
+      'column_offset'
+      'column_count'
+      'column_name_filter'
+    ]
+    delete params[x] for x in exclude_params
+
+    # set our parameters
+    $.extend(params,
+      destination_frame: 'parsed.hex'
+      column_names: prepareArrayForPost(params, 'column_names')
+      column_types: prepareArrayForPost(params, 'column_types')
+      source_frames: "[\"#{frameName}\"]")
+
+    # send off to parse
+    $.ajax
+      url: 'http://139.59.249.87/3/Parse'
+      data: params
+      method: 'post'
+
+uploadFile = () ->
+  fd = new FormData($('form')[0])
+
+  $.ajax
+    url: 'http://139.59.249.87/3/PostFile?destination_frame=uploaded.hex'
+    data: fd
+    method: 'post'
+    processData: false
+    contentType: false
+    cache: false
+>>>>>>> Forms for Datapoints in js
