@@ -20,8 +20,8 @@ $(document).ready ->
       url: "#{url}/3/Models/#{key}"
       data: 'find_compatible_frames': true
       context: @
+      timeout: 15000
       success: (res) ->
-        console.log res
         model = res.models[0]
         holder = $ '<li>'
         $(@).after holder
