@@ -34,7 +34,7 @@ $(document).ready ->
           columns = $.map res.compatible_frames[0].columns, (col, i) ->
             dataPoint = $('<div></div>')
             $('<input>').attr({'id': "#{col.label}"}).appendTo(dataPoint)
-            $("<label>#{col.label}</label>").attr({'for': "#{col.label}"}).addClass('active').appendTo(dataPoint)
+            $("<label>#{col.label}</label>").attr({'for': "#{col.label}"}).appendTo(dataPoint)
             dataPoint.addClass('input-field col s12 m12 l12')
             dataPoint
           dataForm.html(columns)
@@ -44,3 +44,11 @@ $(document).ready ->
           $('.form-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
+
+  $('.data-form').on 'click', (e) ->
+    $(e.target).siblings('label').addClass('active')
+    $(e.target).on
+  $('.data-form').on 'blur','input', (e) ->
+    if !e.target.value
+      $(e.target).siblings('label').removeClass('active')
+      console.log(e)
