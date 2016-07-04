@@ -16,8 +16,27 @@ $(document).ready ->
   $('div').on 'click', '.model', (e) ->
     e.preventDefault()
     key = $(@).data('name')
-    $.getJSON url + '/3/Models/' + key, (result) ->
-      console.log(result)
+    $.ajax
+      url: "#{url}/3/Models/#{key}"
+      data: 'find_compatible_frames': true
+      context: @
+      success: (res) ->
+        console.log res
+        model = res.models[0]
+        holder = $ '<li>'
+        $(@).after holder
+        item = $(@).detach()
+        try
+          columns = $.map res.compatible_frames[0].columns, (col, i) ->
+            li = $ '<li>'
+            li.html col.label
+            li
+          item.append $('<ul>')
+          item.find('ul').append columns
+        catch e
+          console.log 'No columns found.'
+        finally
+          holder.replaceWith item
 
 ################################################################################
 
