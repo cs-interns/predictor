@@ -8,8 +8,10 @@ $(document).ready ->
         $("<option>#{model.model_id.name} | #{model.algo_full_name} Algorithm </option>" )
         .addClass('model').attr('data-name', model.model_id.name)
         .attr({'href': '#', 'value': "#{model.model_id.name}"})
-      $('.models-list').append(modelElements).show()
+      $('.models-list').append(modelElements)
+      $('select').material_select()
   window.onload = retrieveModels
+
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
@@ -22,10 +24,11 @@ $(document).ready ->
         model = res.models[0]
         dataForm = $('.data-form')
         try
+          console.log(model)
           columns = $.map res.compatible_frames[0].columns, (col, i) ->
             dataPoint = $('<div></div>')
             $('<input>').attr({'id': "#{col.label}"}).appendTo(dataPoint)
-            $("<label>#{col.label}</label>").attr({'for': "#{col.label}", 'class': ""}).appendTo(dataPoint)
+            $("<label>#{col.label}</label>").attr({'for': "#{col.label}"}).addClass('active').appendTo(dataPoint)
             dataPoint.addClass('input-field col s12 m12 l12')
             dataPoint
           dataForm.append columns
