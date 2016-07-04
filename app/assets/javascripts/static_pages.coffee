@@ -1,6 +1,8 @@
 url = 'http://139.59.249.87'
 
 $(document).ready ->
+  $('.models-list').hide()
+  $('#loading').show()
 
   retrieveModels = ->
     $.getJSON url + '/3/Models', (result) ->
@@ -10,8 +12,8 @@ $(document).ready ->
         .attr({'href': '#', 'value': "#{model.model_id.name}"})
       $('.models-list').append(modelElements)
       $('select').material_select()
-  window.onload = retrieveModels
-
+      $('#loading').hide()
+  retrieveModels()
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
@@ -20,18 +22,21 @@ $(document).ready ->
       data: 'find_compatible_frames': true
       context: @
       timeout: 15000
+      beforeSend: ->
+        $('#loading').show()
+        $('.table-div').hide()
       success: (res) ->
         model = res.models[0]
-        dataForm = $('.data-form')
+        dataTable = $('<table></table>')
         try
           console.log(model)
+          dataPoints = $('<thead></thead>')
           columns = $.map res.compatible_frames[0].columns, (col, i) ->
-            dataPoint = $('<div></div>')
-            $('<input>').attr({'id': "#{col.label}"}).appendTo(dataPoint)
-            $("<label>#{col.label}</label>").attr({'for': "#{col.label}"}).addClass('active').appendTo(dataPoint)
-            dataPoint.addClass('input-field col s12 m12 l12')
-            dataPoint
-          dataForm.append columns
-          Materialize.updateTextFields()
+            $("<th>#{col.label}</th>").attr({'id': "#{col.label}"}).appendTo(dataPoints)
+            dataPoints
+          dataTable.addClass('responsive-table striped').append columns
+          $('.table-div').html(dataTable).fadeIn()
         catch e
-          console.log 'No columns found.'
+          $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
+        finally
+          $('#loading').hide()
