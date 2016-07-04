@@ -1,21 +1,18 @@
 url = 'http://139.59.249.87'
 
 $(document).ready ->
+
   retrieveModels = ->
-    console.log 'hello'
     $.getJSON url + '/3/Models', (result) ->
-      console.log result
       modelElements = $.map result.models, (model, i) ->
-        listItem = $('<option></option>')
-        $("<a>#{model.model_id.name} | #{model.algo_full_name} Algorithm </a>" )
+        $("<option>#{model.model_id.name} | #{model.algo_full_name} Algorithm </option>" )
         .addClass('model').attr('data-name', model.model_id.name)
-        .attr({'href': '#', 'value': "#{model.model_id.name}"}).appendTo(listItem)
-        return listItem
-      $('.models-list').html(modelElements).show()
+        .attr({'href': '#', 'value': "#{model.model_id.name}"})
+      $('.models-list').append(modelElements).show()
   window.onload = retrieveModels
-  $('div').on 'click', '.model', (e) ->
+  $('.models-list').on 'change', (e) ->
     e.preventDefault()
-    key = $(@).data('name')
+    key = $(@).val()
     $.ajax
       url: "#{url}/3/Models/#{key}"
       data: 'find_compatible_frames': true
@@ -23,37 +20,15 @@ $(document).ready ->
       timeout: 15000
       success: (res) ->
         model = res.models[0]
-        holder = $ '<li>'
-        $(@).after holder
-        item = $(@).detach()
+        dataForm = $('.data-form')
         try
           columns = $.map res.compatible_frames[0].columns, (col, i) ->
-            li = $ '<li>'
-            li.html col.label
-            li.data 'type', col.type
-            li
-          item.append $('<ul>')
-          item.find('ul').append columns
+            dataPoint = $('<div></div>')
+            $('<input>').attr({'id': "#{col.label}"}).appendTo(dataPoint)
+            $("<label>#{col.label}</label>").attr({'for': "#{col.label}", 'class': ""}).appendTo(dataPoint)
+            dataPoint.addClass('input-field col s12 m12 l12')
+            dataPoint
+          dataForm.append columns
+          Materialize.updateTextFields()
         catch e
           console.log 'No columns found.'
-        finally
-          holder.replaceWith item
-
-################################################################################
-
-  $('#frame-view').on 'click', ->
-    $.getJSON url + '/3/Frames', (result) ->
-      console.log result
-      modelElements = $.map result.frames, (frame, i) ->
-        listItem = $('<li></li>')
-        $("<a>#{frame.frame_id.name}</a>" )
-        .addClass('frame').attr('data-name', frame.frame_id.name)
-        .attr('href', '#').appendTo(listItem)
-        return listItem
-      $('.frames-list').html(modelElements)
-
-  $('div').on 'click', '.frame', (e) ->
-    e.preventDefault()
-    key = $(@).data('name')
-    $.getJSON url + '/4/Frames/' + key, (result) ->
-      console.log(result)
