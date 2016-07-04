@@ -1,18 +1,18 @@
-# viewlist = (button, url, ) ->
 url = 'http://139.59.249.87'
 
 $(document).ready ->
-  $('#model-view').on 'click', ->
+  retrieveModels = ->
+    console.log 'hello'
     $.getJSON url + '/3/Models', (result) ->
       console.log result
       modelElements = $.map result.models, (model, i) ->
-        listItem = $('<li></li>')
+        listItem = $('<option></option>')
         $("<a>#{model.model_id.name} | #{model.algo_full_name} Algorithm </a>" )
         .addClass('model').attr('data-name', model.model_id.name)
-        .attr('href', '#').appendTo(listItem)
+        .attr({'href': '#', 'value': "#{model.model_id.name}"}).appendTo(listItem)
         return listItem
-      $('.models-list').html(modelElements)
-
+      $('.models-list').html(modelElements).show()
+  window.onload = retrieveModels
   $('div').on 'click', '.model', (e) ->
     e.preventDefault()
     key = $(@).data('name')
@@ -41,7 +41,6 @@ $(document).ready ->
 
 ################################################################################
 
-$(document).ready ->
   $('#frame-view').on 'click', ->
     $.getJSON url + '/3/Frames', (result) ->
       console.log result
