@@ -57,3 +57,16 @@ $(document).ready ->
     key = $(@).data('name')
     $.getJSON url + '/4/Frames/' + key, (result) ->
       console.log(result)
+
+uploadFile = () ->
+  fd = new FormData($('form')[0])
+  
+  $.ajax
+    url: 'http://139.59.249.87/3/PostFile?destination_frame=test.hex'
+    data: fd
+    method: 'post'
+    processData: false
+    contentType: false
+    cache: false
+    success: (res) ->
+      console.log res
