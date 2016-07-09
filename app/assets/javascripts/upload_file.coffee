@@ -1,7 +1,8 @@
 Upload = (() ->
   # private
-  id = 0 
+  id = 0
   id_len = 6
+
 
   attachUploadButtonListener = () ->
     $('form button').on 'click', (e) ->
@@ -22,7 +23,7 @@ Upload = (() ->
       processData: false
       contentType: false
       cache: false
-  
+
   parseFrame = (frameName) ->
     guess = guessParseParams(frameName)
     guess.done (params) ->
@@ -80,7 +81,7 @@ Upload = (() ->
 
   init = () ->
     attachUploadButtonListener()
-  
+
   return {
     init: init
     frame_id: get_id()
