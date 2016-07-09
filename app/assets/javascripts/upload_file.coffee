@@ -16,7 +16,7 @@ Upload = (() ->
   uploadFile = () ->
     fd = new FormData($('form')[0])
     $.ajax
-      url: "http://139.59.249.87/3/PostFile?destination_frame=#{get_id()}"
+      url: "http://139.59.249.87/3/PostFile?destination_frame=#{encodeURIComponent(get_id())}"
       data: fd
       method: 'post'
       processData: false
