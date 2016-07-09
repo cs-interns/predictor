@@ -2,6 +2,7 @@ url = 'http://139.59.249.87'
 
 $(document).ready ->
   $.Upload.init()
+  $.Predictions.init()
   $('.models-list').hide()
   $('#loading').show()
 
