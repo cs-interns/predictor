@@ -8,6 +8,7 @@ Upload = (() ->
     $('form button').on 'click', (e) ->
       if $(this).siblings('input')[0].files.length == 0
         return false
+      id = 0  # clear id, new file upload
       upload = uploadFile()
       upload.done (response) ->
         # parse
