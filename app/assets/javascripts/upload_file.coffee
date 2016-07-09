@@ -33,6 +33,8 @@ Upload = (() ->
         url: 'http://139.59.249.87/3/Parse'
         data: params
         method: 'post'
+        success: () ->
+          alert 'Upload Success.'
 
   deleteExtraParams = (params) ->
     # delete some params, server errors out with these params
@@ -53,7 +55,7 @@ Upload = (() ->
   setParseParams = (params, opts) ->
       # set our parameters
       return $.extend(params,
-        destination_frame: "parsed_#{get_id()}.hex"
+        destination_frame: "#{get_id()}.hex"
         column_names: prepareArrayForPost(params, 'column_names')
         column_types: prepareArrayForPost(params, 'column_types')
         source_frames: "[\"#{opts.frameName}\"]")
@@ -74,14 +76,14 @@ Upload = (() ->
   # public
   get_id = () ->
     id = id || Array(id_len + 1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, id_len)
-    id
+    return id
 
   init = () ->
     attachUploadButtonListener()
-
   
   return {
     init: init
+    frame_id: get_id()
   }
 )()
 $.extend(Upload: Upload)
