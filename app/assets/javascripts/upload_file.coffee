@@ -83,7 +83,7 @@ Upload = (() ->
   
   return {
     init: init
-    getUploadedFrameId: get_id()
+    uploadedFrameId: get_id()
   }
 )()
 $.extend(Upload: Upload)
