@@ -14,6 +14,8 @@ Predictions = (() ->
     $.ajax
       url: "http://139.59.249.87/3/Predictions/models/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}.hex"
       method: 'post'
+      success: (response) ->
+        console.log response
 
   return {
     init: init
