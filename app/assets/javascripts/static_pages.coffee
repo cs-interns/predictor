@@ -1,6 +1,9 @@
 url = 'http://139.59.249.87'
+random_id = generateId(8)
+
 
 $(document).ready ->
+  Upload.init()
   $('.models-list').hide()
   $('#loading').show()
 
@@ -67,8 +70,15 @@ $(document).ready ->
     upload = uploadFile()
     upload.done (response) ->
       # parse
-      parseFrame 'uploaded.hex'
+      parseFrame random_id
     return false;
+
+  $('#predict').on 'click', () ->
+    console.log random_id
+    # make prediction
+
+generateId = (len) ->
+  Array(len + 1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, len)
 
 guessParseParams = (frameName) ->
   $.ajax
@@ -103,7 +113,7 @@ parseFrame = (frameName) ->
 
     # set our parameters
     $.extend(params,
-      destination_frame: 'parsed.hex'
+      destination_frame: "parsed_#{random_id}.hex"
       column_names: prepareArrayForPost(params, 'column_names')
       column_types: prepareArrayForPost(params, 'column_types')
       source_frames: "[\"#{frameName}\"]")
@@ -118,7 +128,7 @@ uploadFile = () ->
   fd = new FormData($('form')[0])
   
   $.ajax
-    url: 'http://139.59.249.87/3/PostFile?destination_frame=uploaded.hex'
+    url: "http://139.59.249.87/3/PostFile?destination_frame=#{random_id}"
     data: fd
     method: 'post'
     processData: false
