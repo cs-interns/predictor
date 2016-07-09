@@ -1,7 +1,7 @@
 Predictions = (() ->
   init = () ->
     $('#predict').on 'click', (e) ->
-      id = $.Upload.getUploadedFrameId()
+      id = $.Upload.uploadedFrameId
       if id
         predict(id)
       return false
