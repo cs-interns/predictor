@@ -1,7 +1,12 @@
 Predictions = (() ->
   init = () ->
-    false
+    $('#predict').on 'click', (e) ->
+      id = $.Upload.getUploadedFrameId()
+      if id
+        predict(id)
+      return false
 
+  
   getModelId = () ->
     $('select.models-list').val()
 
