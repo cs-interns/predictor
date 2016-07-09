@@ -1,7 +1,7 @@
 Predictions = (() ->
   init = () ->
     $('#predict').on 'click', (e) ->
-      id = $.Upload.uploadedFrameId
+      id = $.Upload.uploadedFrameId()
       if id
         predict(id)
       return false
@@ -12,7 +12,7 @@ Predictions = (() ->
 
   predict = (frame_id) ->
     $.ajax
-      url: "http://139.59.249.87/3/Predictions/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}"
+      url: "http://139.59.249.87/3/Predictions/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}.hex"
 
   return {
     init: init
