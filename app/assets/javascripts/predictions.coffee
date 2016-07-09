@@ -12,7 +12,7 @@ Predictions = (() ->
 
   predict = (frame_id) ->
     $.ajax
-      url: "http://139.59.249.87/3/Predictions/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}.hex"
+      url: "http://139.59.249.87/3/Predictions/models/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}.hex"
       method: 'post'
 
   return {
