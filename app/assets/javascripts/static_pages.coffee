@@ -47,22 +47,26 @@ $(document).ready ->
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
+    exclude_model_fields = ['models/data_frame', 'models/algo',
+    'models/response_column_name', 'models/output/domains',
+    'models/output/cross_validation_models', 'models/output/model_summary',
+    'models/output/scoring_history']
     $.ajax
       url: "#{url}/3/Models/#{key}"
-      data: 'find_compatible_frames': true
+      data: {'_exclude_fields': exclude_model_fields.join(",")}
       context: @
       timeout: 15000
       beforeSend: ->
         $('#loading').show()
         $('.table-div').hide()
       success: (res) ->
-        model = res.models[0]
+        model = res.models[0].output.names
         dataTable = $('<table></table>')
         try
           console.log(model)
           dataPoints = $('<thead></thead>')
-          columns = $.map res.compatible_frames[0].columns, (col, i) ->
-            $("<th>#{col.label}</th>").attr({'id': "#{col.label}"}).appendTo(dataPoints)
+          columns = $.map res.models[0].output.names, (col, i) ->
+            $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
             dataPoints
           dataTable.addClass('responsive-table striped view-data').append columns
           $('.table-div').html(dataTable).fadeIn()
