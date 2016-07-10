@@ -8,16 +8,18 @@ $(document).ready ->
   $('.upload-div').hide()
 
   $('.upload-file').change ->
-    console.log "hey"
     file = this.files[0]
     console.log file
     # try
     reader = new FileReader()
-
+    #preview first 10 only
     reader.readAsText(file)
     reader.onload = (e) ->
       fileContent = e.target.result
-      arr = fileContent.split("\n")
+      arr = fileContent.split("\n").slice(0, 10)
+      # remove the last one
+      arr_len = arr.length
+      arr = arr.slice 0, arr_len - 1
       arr2 = []
       for line in arr
         arr2.push line.split(",")
@@ -75,3 +77,6 @@ $(document).ready ->
         finally
           $('#loading').hide()
           $('.upload-div').show()
+      error: (xhr, status, error_thrown) ->
+        $('#loading').hide()
+        $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
