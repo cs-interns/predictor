@@ -92,7 +92,7 @@ $(document).ready ->
           $('.feature-label').show()
           $('.data-label').show()
           $('.upload-div').show()
-          $('.data-div').html('<h6>No Uploaded Data</h6>').addClass('center').fadeIn()
+          $('.data-div').html('<h6>No Data To Preview</h6>').addClass('center').fadeIn()
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
         $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
