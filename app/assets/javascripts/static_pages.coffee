@@ -49,9 +49,10 @@ $(document).ready ->
   retrieveModels = ->
     $.getJSON url + '/3/Models', (result) ->
       modelElements = $.map result.models, (model, i) ->
-        $("<option>#{model.model_id.name} | #{model.algo_full_name} Algorithm </option>" )
-        .addClass('model').attr('data-name', model.model_id.name)
-        .attr({'href': '#', 'value': "#{model.model_id.name}"})
+        unless model.model_id.name.match(/_cv_\d+/g)
+          $("<option>#{model.model_id.name} | #{model.algo_full_name} Algorithm </option>" )
+          .addClass('model').attr('data-name', model.model_id.name)
+          .attr({'href': '#', 'value': "#{model.model_id.name}"})
       $('.models-list').append(modelElements)
       $('select').material_select()
       $('#loading').hide()
