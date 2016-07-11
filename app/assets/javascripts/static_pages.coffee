@@ -6,6 +6,8 @@ $(document).ready ->
   $('.models-list').hide()
   $('#loading').show()
   $('.upload-div').hide()
+  $('.feature-label').hide()
+  $('.data-label').hide()
 
   $('.upload-file').change ->
     file = this.files[0]
@@ -23,14 +25,22 @@ $(document).ready ->
       arr2 = []
       for line in arr
         arr2.push line.split(",")
+      dataTable = $('<table></table>')
+      tableHead = $('<thead></thead>')
       tableBody = $('<tbody></tbody>')
       for lines in arr2
-        tableRow = $('<tr></tr>')
-        for data in lines
-          tableRow.append ("<td>#{data}</td>")
+        if lines == arr2[0]
+          for data in lines
+            tableHead.append ("<th>#{data}</th>")
+        else
+          tableRow = $('<tr></tr>')
+          for data in lines
+            tableRow.append ("<td>#{data}</td>")
         tableBody.append tableRow
-
-      $('.table-div').find('table').html tableBody
+        dataTable.addClass("responsive-table striped").append(tableHead).append(tableBody)
+      $('.data-div').html dataTable
+      $('.data-label').show()
+      # $('.table-div').find('table').html tableBoddy
       console.log arr2
     # catch error
     #   console.log "naay error"
@@ -65,6 +75,7 @@ $(document).ready ->
         model = res.models[0].output.names
         dataTable = $('<table></table>')
         try
+          $('.table-div').show()
           console.log(model)
           dataPoints = $('<thead></thead>')
           columns = $.map res.models[0].output.names, (col, i) ->
@@ -76,6 +87,7 @@ $(document).ready ->
           $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
+          $('.feature-label').show()
           $('.upload-div').show()
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
