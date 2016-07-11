@@ -13,6 +13,19 @@ html, body {
 	margin-top: 20px !important;
 }
 
+.table-div, .data-div{
+	overflow-x: auto;
+}
+
+.feature-label, .data-label{
+	margin-top: 35px !important;
+}
+
 h3{
 	font-weight: 500 !important;
+}
+
+#results-container{
+	background: #fce4ec !important;
+	padding: 15px;
 }
