@@ -5,6 +5,7 @@ $(document).ready ->
   $.Predictions.init()
   $('.models-list').hide()
   $('#loading').show()
+  $('#predict').hide()
   $('.upload-div').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
@@ -40,7 +41,8 @@ $(document).ready ->
         dataTable.addClass("responsive-table striped").append(tableHead).append(tableBody)
       $('.data-div').html dataTable
       $('.data-label').show()
-      # $('.table-div').find('table').html tableBoddy
+      $('#predict').show()
+      # $('.table-div').find('table').html tableBody
       console.log arr2
     # catch error
     #   console.log "naay error"
@@ -84,11 +86,13 @@ $(document).ready ->
           dataTable.addClass('responsive-table striped view-data').append columns
           $('.table-div').html(dataTable).fadeIn()
         catch e
-          $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
+          $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
           $('.feature-label').show()
+          $('.data-label').show()
           $('.upload-div').show()
+          $('.data-div').html('<h6>No Uploaded Data</h6>').addClass('center').fadeIn()
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
         $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
