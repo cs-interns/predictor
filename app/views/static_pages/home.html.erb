@@ -1,43 +1,52 @@
 <%= provide(:title, "Home")%>
 
 <div class="row">
-  <div class="model-div col s12 m8 l8 offset-m2 offset-l2">
+
+  <div class="model-div col s6 m6 l6 offset-m1 offset-l1 container" id="">
     <h3 class="center">Models here</h3>
     <div class="input-field">
       <select class='models-list'>
         <option value="" selected disabled>Choose a Model</option>
       </select>
     </div>
-  </div>
-</div>
-<div class="row">
-  <h4 class="feature-label center">Model Features</h4>
-  <div class="table-div col s12 m12 l12">
 
-  </div>
-</div>
-<div class="">
-  <h4 class="data-label center">Uploaded Data</h4>
-  <div class="data-div row">
+    <div class="row center">
+      <button id="predict">Predict</button>
+    </div>
 
-  </div>
-</div>
-
-<div class="row center upload-div">
-  <form enctype="multipart/form-data">
-  	<input type="file" name="file" class= "upload-file">
-  	<button>Upload</button>
-  </form>
-
-</div>
-
-
-<div class="row center">
-	<button id="predict">Predict</button>
-</div>
-
-  <!-- LOADER STUFF IS HERE -->
-  <div id="loading" class="center">
-  <!-- this is the loading gif -->
+    <!-- LOADER STUFF IS HERE -->
+    <div id="loading" class="center">
+    <!-- this is the loading gif -->
     <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+    </div>
+
+    <div class="row">
+      <h4 class="feature-label center">Model Features</h4>
+      <div class="table-div col s12 m12 l12">
+
+      </div>
+    </div>
+
+    <div class="">
+      <h4 class="data-label center">Uploaded Data</h4>
+      <div class="data-div row">
+
+      </div>
+    </div>
+
+    <div class="row center upload-div">
+      <form enctype="multipart/form-data">
+        <input type="file" name="file" class= "upload-file">
+        <button class="button">Upload</button>
+      </form>
+    </div>
   </div>
+
+  <div class="results-div col s6 m4 l4 offset-m1 offset-l1 container">
+    <h3 class="center">Results</h3>
+    <h2 class="center" id="result"><h2>
+    <label class="center" id="percent"></label>
+
+  </div>
+
+</div>
