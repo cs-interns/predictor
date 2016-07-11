@@ -24,6 +24,8 @@ Upload = (() ->
       processData: false
       contentType: false
       cache: false
+      beforeSend: ->
+          $("#loading-upload").show()
 
   parseFrame = (frameName) ->
     guess = guessParseParams(frameName)
@@ -36,7 +38,8 @@ Upload = (() ->
         data: params
         method: 'post'
         success: () ->
-          alert 'Upload Success.'
+          Materialize.toast('Upload succesful!', 1000)
+          $("#loading-upload").hide()
 
   deleteExtraParams = (params) ->
     # delete some params, server errors out with these params

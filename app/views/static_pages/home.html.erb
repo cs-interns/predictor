@@ -1,43 +1,65 @@
 <%= provide(:title, "Home")%>
 
 <div class="row">
-  <div class="model-div col s12 m8 l8 offset-m2 offset-l2">
-    <h3 class="center">Models here</h3>
-    <div class="input-field">
-      <select class='models-list'>
-        <option value="" selected disabled>Choose a Model</option>
-      </select>
+
+  <div class="model-div col s6 m7 l7">
+    <div class="container">
+      <h3 class="center">Models</h3>
+      <div class="input-field">
+        <select class='models-list'>
+          <option value="" selected disabled>Choose a Model</option>
+        </select>
+      </div>
+
+      <!-- LOADER STUFF IS HERE -->
+      <div id="loading" class="center">
+      <!-- this is the loading gif -->
+      <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+      </div>
+
+      <div class="row">
+        <h5 class="feature-label center">Features</h5>
+        <div class="table-div col s12 m12 l12" >
+
+        </div>
+      </div>
+
+      <div class="row">
+        <h5 class="data-label center">Data Preview</h5>
+        <div class="data-div col s12 m12 l12">
+
+        </div>
+      </div>
+
+      <div class="row center upload-div">
+        <form enctype="multipart/form-data">
+          <input type="file" name="file" class= "upload-file">
+          <button class="btn">Upload</button>
+        </form>
+        <!-- LOADER STUFF IS HERE -->
+        <div id="loading-upload" class="center">
+        <!-- this is the loading gif -->
+        <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+        </div>
+      </div>
+
+      <div class="row center">
+        <button class="btn" id="predict">Predict</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <h4 class="feature-label center">Model Features</h4>
-  <div class="table-div col s12 m12 l12">
 
+  <div class="results-div col s6 m5 l5">
+    <div class="container" id="results-container">
+      <h3 class="center">Predicted Classification</h3>
+      <!-- LOADER STUFF IS HERE -->
+      <div id="loading-results" class="center">
+      <!-- this is the loading gif -->
+      <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+      </div>
+      <h5 class="result-label center"><h5>
+      <h6 class="rate-label center"></h6>
+    </div>
   </div>
-</div>
-<div class="">
-  <h4 class="data-label center">Uploaded Data</h4>
-  <div class="data-div row">
-
-  </div>
-</div>
-
-<div class="row center upload-div">
-  <form enctype="multipart/form-data">
-  	<input type="file" name="file" class= "upload-file">
-  	<button>Upload</button>
-  </form>
 
 </div>
-
-
-<div class="row center">
-	<button id="predict">Predict</button>
-</div>
-
-  <!-- LOADER STUFF IS HERE -->
-  <div id="loading" class="center">
-  <!-- this is the loading gif -->
-    <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
-  </div>
