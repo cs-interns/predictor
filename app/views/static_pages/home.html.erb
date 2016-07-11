@@ -2,51 +2,54 @@
 
 <div class="row">
 
-  <div class="model-div col s6 m6 l6 offset-m1 offset-l1 container" id="">
-    <h3 class="center">Models here</h3>
-    <div class="input-field">
-      <select class='models-list'>
-        <option value="" selected disabled>Choose a Model</option>
-      </select>
-    </div>
-
-    <div class="row center">
-      <button id="predict">Predict</button>
-    </div>
-
-    <!-- LOADER STUFF IS HERE -->
-    <div id="loading" class="center">
-    <!-- this is the loading gif -->
-    <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
-    </div>
-
-    <div class="row">
-      <h4 class="feature-label center">Model Features</h4>
-      <div class="table-div col s12 m12 l12">
-
+  <div class="model-div col s6 m8 l8">
+    <div class="container">
+      <h3 class="center">Models</h3>
+      <div class="input-field">
+        <select class='models-list'>
+          <option value="" selected disabled>Choose a Model</option>
+        </select>
       </div>
-    </div>
 
-    <div class="">
-      <h4 class="data-label center">Uploaded Data</h4>
-      <div class="data-div row">
-
+      <!-- LOADER STUFF IS HERE -->
+      <div id="loading" class="center">
+      <!-- this is the loading gif -->
+      <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
       </div>
-    </div>
 
-    <div class="row center upload-div">
-      <form enctype="multipart/form-data">
-        <input type="file" name="file" class= "upload-file">
-        <button class="button">Upload</button>
-      </form>
+      <div class="row">
+        <h5 class="feature-label center">Features</h5>
+        <div class="table-div col s12 m12 l12" >
+
+        </div>
+      </div>
+
+      <div class="row">
+        <h5 class="data-label center">Uploaded Data</h5>
+        <div class="data-div col s12 m12 l12">
+
+        </div>
+      </div>
+
+      <div class="row center upload-div">
+        <form enctype="multipart/form-data">
+          <input type="file" name="file" class= "upload-file">
+          <button class="btn">Upload</button>
+        </form>
+      </div>
+
+      <div class="row center">
+        <button class="btn" id="predict">Predict</button>
+      </div>
     </div>
   </div>
 
-  <div class="results-div col s6 m4 l4 offset-m1 offset-l1 container">
-    <h3 class="center">Results</h3>
-    <h2 class="center" id="result"><h2>
-    <label class="center" id="percent"></label>
-
+  <div class="results-div col s6 m4 l4">
+    <div class="container" id="results-container">
+      <h3 class="center">Results</h3>
+      <h5 class="center" id="result">This is a sample result<h5>
+      <label class="center" id="percent">Accuracy: </label>
+    </div>
   </div>
 
 </div>
