@@ -5,6 +5,20 @@ Predictions = (() ->
         predictionMachine(id)
       return false
 
+  uploadFromTable = () ->
+    data = prepareData()
+    console.log(data)
+    fileBlob = new Blob(data, {type: 'text/csv'})
+    $.Upload.uploadAndParse(fileBlob)
+    
+  prepareData = () ->
+    columnNames = $.map($('.view-data thead').children(), (col, i) ->
+      return $(col).html()
+    )
+    columnData = $.map($('#data-row').children(), (input, i) ->
+      return $(input).children().first().val()
+    )
+    return [[columnNames.join(','), columnData.join(',')].join("\r\n")]
 
   getModelId = () ->
     $('select.models-list').val()
