@@ -4,9 +4,8 @@ Upload = (() ->
   id_len = 6
 
 
-  attachUploadButtonListener = () ->
-    $('form button').on 'click', (e) ->
-      if $(this).siblings('input')[0].files.length == 0
+  uploadAndPredict = (e) ->
+      if $(e.target).siblings('input')[0].files.length == 0
         return false
       id = 0  # clear id, new file upload
       upload = uploadFile()
@@ -40,6 +39,7 @@ Upload = (() ->
         success: () ->
           Materialize.toast('Upload succesful!', 1000)
           $("#loading-upload").hide()
+          $.Predictions.predict()
 
   deleteExtraParams = (params) ->
     # delete some params, server errors out with these params
@@ -87,7 +87,7 @@ Upload = (() ->
     attachUploadButtonListener()
 
   return {
-    init: init
+    uploadAndPredict: uploadAndPredict
     getUploadedFrameId: get_id
   }
 )()

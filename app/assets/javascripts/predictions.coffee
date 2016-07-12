@@ -1,16 +1,15 @@
 Predictions = (() ->
-  init = () ->
-    $('#predict').on 'click', (e) ->
+  predict = (e) ->
       id = $.Upload.getUploadedFrameId()
       if id
-        predict(id)
+        predictionMachine(id)
       return false
 
-  
+
   getModelId = () ->
     $('select.models-list').val()
 
-  predict = (frame_id) ->
+  predictionMachine = (frame_id) ->
     $.ajax
       url: "http://139.59.249.87/3/Predictions/models/#{encodeURI(getModelId())}/frames/#{encodeURI(frame_id)}.hex"
       method: 'post'
@@ -28,7 +27,7 @@ Predictions = (() ->
         $('#loading-results').hide()
 
   return {
-    init: init
+    predict: predict
   }
 )()
 $.extend(Predictions: Predictions)

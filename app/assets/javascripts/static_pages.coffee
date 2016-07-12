@@ -1,14 +1,16 @@
 url = 'http://139.59.249.87'
 
 $(document).ready ->
-  $.Upload.init()
-  $.Predictions.init()
   $('.models-list').hide()
   $('#loading').show()
   $('#predict').hide()
   $('.upload-div').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
+
+  $('.upload-button').click (e)->
+    $.Upload.uploadAndPredict(e)
+    return false
 
   $('.upload-file').change ->
     file = this.files[0]
