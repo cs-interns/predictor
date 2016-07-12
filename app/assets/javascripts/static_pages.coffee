@@ -3,7 +3,6 @@ url = 'http://139.59.249.87'
 $(document).ready ->
   $('.models-list').hide()
   $('#loading').show()
-  $('#predict').hide()
   $('.upload-div').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
@@ -101,6 +100,7 @@ $(document).ready ->
           tableRow = $('<tr></tr>')
           for x in [0..columns.length] by 1
             tableRow.append($("<td>").html($('<input type="text">')))
+          tableRow.attr('id', 'data-row')
           dataTable.append tableRow
           $('.table-div').html(dataTable).fadeIn()
         catch e

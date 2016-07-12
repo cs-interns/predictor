@@ -7,15 +7,22 @@ Upload = (() ->
   uploadAndPredict = (e) ->
       if $(e.target).siblings('input')[0].files.length == 0
         return false
-      id = 0  # clear id, new file upload
-      upload = uploadFile()
-      upload.done (response) ->
-        # parse
-        parseFrame get_id()
-      return false;
+      uploadAndParse()
+      return false
 
-  uploadFile = () ->
-    fd = new FormData($('form')[0])
+  uploadAndParse = (file) ->
+    id = 0  # clear id, new file upload
+    upload = uploadFile(file)
+    upload.done (response) ->
+      # parse
+      parseFrame get_id()
+
+  uploadFile = (file) ->
+    if file
+      fd = new FormData()
+      fd.append('file', file)
+    else
+      fd = new FormData($('form')[0])
     $.ajax
       url: "http://139.59.249.87/3/PostFile?destination_frame=#{encodeURIComponent(get_id())}"
       data: fd
@@ -83,12 +90,17 @@ Upload = (() ->
     id = id || Array(id_len + 1).join((Math.random().toString(36)+'00000000000000000').slice(2, 18)).slice(0, id_len)
     return id
 
+  hasUploaded = () ->
+    return id != 0
+
   init = () ->
     attachUploadButtonListener()
 
   return {
     uploadAndPredict: uploadAndPredict
     getUploadedFrameId: get_id
+    uploadAndParse: uploadAndParse
+    hasUploaded: hasUploaded
   }
 )()
 $.extend(Upload: Upload)
