@@ -70,7 +70,9 @@ Upload = (() ->
         destination_frame: "#{get_id()}.hex"
         column_names: prepareArrayForPost(params, 'column_names')
         column_types: prepareArrayForPost(params, 'column_types')
-        source_frames: "[\"#{opts.frameName}\"]")
+        source_frames: "[\"#{opts.frameName}\"]"
+        delete_on_done: true
+      )
 
   prepareArrayForPost = (obj, key) ->
     data = $.map obj[key], (item, index) ->
