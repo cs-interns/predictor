@@ -39,6 +39,7 @@ $(document).ready ->
           tableRow = $('<tr></tr>')
           for data in lines
             tableRow.append ("<td>#{data}</td>")
+          
         tableBody.append tableRow
         dataTable.addClass("responsive-table striped").append(tableHead).append(tableBody)
       $('.data-div').html dataTable
@@ -77,6 +78,7 @@ $(document).ready ->
         $('#loading').show()
         $('.table-div').hide()
       success: (res) ->
+        console.log(res)
         model = res.models[0].output.names
         dataTable = $('<table></table>')
         try
@@ -87,6 +89,10 @@ $(document).ready ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
             dataPoints
           dataTable.addClass('responsive-table striped view-data').append columns
+          tableRow = $('<tr></tr>')
+          for x in [0..columns.length] by 1
+            tableRow.append($("<td>").html($('<input type="text">')))
+          dataTable.append tableRow
           $('.table-div').html(dataTable).fadeIn()
         catch e
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
