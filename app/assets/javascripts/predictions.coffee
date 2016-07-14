@@ -21,10 +21,17 @@ Predictions = (() ->
         result_index = prediction[0].data[0]+1
         result = prediction[result_index]
         label = result.label
-        rate = result.mean * 100
-        $('.result-label').html(label).fadeIn()
-        $('.rate-label').html("Accuracy: "+rate.toFixed(2)+"%").fadeIn()
-        $('#loading-results').hide()
+        model_name = response.model.name
+        $.ajax
+         url: "http://139.59.249.87/3/Models/#{model_name}"
+         method: 'get'
+         success: (res) ->
+          model_rate = parseFloat(res.models[0].output.cross_validation_metrics_summary.data[1][0]) * 100
+          confidence = result.mean * 100
+          $('.result-label').html(label).fadeIn()
+          $('.confidence-rate-label').html("Confidence: "+confidence.toFixed(2)+"%").fadeIn()
+          $('.model-rate-label').html("Model Accuracy: "+model_rate.toFixed(2)+"%").fadeIn()
+          $('#loading-results').hide()
 
   return {
     predict: predict
