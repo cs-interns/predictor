@@ -20,6 +20,7 @@ $(document).ready ->
     reader.readAsText(file)
     reader.onload = (e) ->
       fileContent = e.target.result
+      console.log(fileContent)
       arr = fileContent.split("\n").slice(0, 10)
       # remove the last one
       arr_len = arr.length
@@ -89,7 +90,7 @@ $(document).ready ->
             dataPoints
           dataTable.addClass('responsive-table striped view-data').append columns
           tableRow = $('<tr></tr>')
-          for x in [0..columns.length] by 1
+          for x in [1..columns.length] by 1
             tableRow.append($("<td>").html($('<input type="text">')))
           tableRow.attr('id', 'data-row')
           dataTable.append tableRow

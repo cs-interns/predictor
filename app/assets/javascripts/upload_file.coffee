@@ -6,8 +6,10 @@ Upload = (() ->
 
   uploadAndPredict = (e) ->
       if $(e.target).siblings('input')[0].files.length == 0
-        return false
-      uploadAndParse()
+        # no file uploaded, use form
+        $.Predictions.uploadFromTable()
+      else
+        uploadAndParse()
       return false
 
   uploadAndParse = (file) ->
