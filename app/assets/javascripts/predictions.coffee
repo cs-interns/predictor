@@ -7,8 +7,7 @@ Predictions = (() ->
 
   uploadFromTable = () ->
     data = prepareData()
-    console.log(data)
-    fileBlob = new Blob(data, {type: 'text/csv'})
+    fileBlob = new Blob([data.join('\r\n')], {type: 'text/csv'})
     $.Upload.uploadAndParse(fileBlob)
     
   prepareData = () ->
@@ -18,7 +17,7 @@ Predictions = (() ->
     columnData = $.map($('#data-row').children(), (input, i) ->
       return $(input).children().first().val()
     )
-    return [[columnNames.join(','), columnData.join(',')].join("\r\n")]
+    return [columnNames.join(','), columnData.join(',')]
 
   getModelId = () ->
     $('select.models-list').val()
@@ -49,6 +48,7 @@ Predictions = (() ->
 
   return {
     predict: predict
+    uploadFromTable: uploadFromTable
   }
 )()
 $.extend(Predictions: Predictions)
