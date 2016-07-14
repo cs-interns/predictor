@@ -8,6 +8,15 @@ $(document).ready ->
   $('.feature-label').hide()
   $('.data-label').hide()
 
+  $('.results-div').pushpin({ top: $('.results-div').offset().top })
+
+  $(window).on "scroll", () ->
+    if($('.results-div').hasClass('pinned'))
+      $('.results-div').addClass('push-m7 push-s7 push-l7')
+    else if ($('.results-div').hasClass('pin-top'))
+      $('.results-div').removeClass('push-m7 push-s7 push-l7')
+
+
   $('.upload-button').click (e)->
     $.Upload.uploadAndPredict(e)
     return false
