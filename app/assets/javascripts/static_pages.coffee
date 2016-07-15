@@ -9,6 +9,9 @@ $(document).ready ->
   
   $('.model-div').on('focus', '#data-row input', (e) ->
     input = $(e.target)
+    choices = input.data('choices')
+    if choices
+      return
   )
 
   $('.results-div').pushpin({ top: $('.results-div').offset().top })
@@ -99,13 +102,25 @@ $(document).ready ->
           $.each res.models[0].output.names, (i, col) ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
           dataTable.addClass('responsive-table striped view-data').append(dataPoints)
-          tableRow = $('<tr></tr>')
+          tableRow = $('<tr>', {id: 'data-row'})
           $.each dataPoints.children(), (i, dataPoint) ->
-            tableRow.append($('<td>').html($('<input type="text">').data('name', $(dataPoint).html()).data('choices', modelInputMeta.domains[i])))
-          tableRow.attr('id', 'data-row')
+            choices = modelInputMeta.domains[i]
+            input = 0
+            if choices
+              options = $.map(choices, (choice, i) ->
+                $('<option>', {value: choice, text: choice})
+              )
+              options.unshift($('<option>', {text: '---'}))
+              input = $('<select>', {html: options})
+            else
+              input = $('<input>', {type: 'text'})
+            input.data('name', $(dataPoint).html())
+            tableRow.append($('<td>', {html: input}))
           dataTable.append tableRow
           $('.table-div').html(dataTable).fadeIn()
+          tableRow.find('select').material_select()
         catch e
+          console.log(e)
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
