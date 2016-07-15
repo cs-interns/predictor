@@ -110,7 +110,7 @@ $(document).ready ->
               options = $.map(choices, (choice, i) ->
                 $('<option>', {value: choice, text: choice})
               )
-              options.unshift($('<option>', {text: '---'}))
+              options.unshift($('<option>'))
               input = $('<select>', {html: options})
             else
               input = $('<input>', {type: 'text'})
