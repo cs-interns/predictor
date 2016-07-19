@@ -5,6 +5,12 @@ Predictions = (() ->
         predictionMachine(id)
       return false
 
+  deleteUploadFrame = (frame_id) ->
+    $.ajax
+      url: "http://139.59.249.87/3/Frames/#{frame_id}"
+      method: 'DELETE'
+      success: () ->
+        console.log "Winner!"
 
   getModelId = () ->
     $('select.models-list').val()
@@ -32,7 +38,7 @@ Predictions = (() ->
           $('.confidence-rate-label').html("Confidence: "+confidence.toFixed(2)+"%").fadeIn()
           $('.model-rate-label').html("Model Accuracy: "+model_rate.toFixed(2)+"%").fadeIn()
           $('#loading-results').hide()
-
+          deleteUploadFrame($.Upload.getUploadedFrameId())
   return {
     predict: predict
   }
