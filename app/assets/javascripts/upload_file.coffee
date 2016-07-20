@@ -2,6 +2,8 @@ Upload = (() ->
   # private
   id = 0
   id_len = 6
+  columnTypes = []
+  columnNames = ''
 
 
   uploadAndPredict = (e) ->
@@ -68,12 +70,14 @@ Upload = (() ->
 
   setParseParams = (params, opts) ->
       # set our parameters
+      console.log(columnTypes)
       return $.extend(params,
         destination_frame: "#{get_id()}.hex"
-        column_names: prepareArrayForPost(params, 'column_names')
-        column_types: prepareArrayForPost(params, 'column_types')
+        column_names: columnNames
         source_frames: "[\"#{opts.frameName}\"]"
-        delete_on_done: false
+        delete_on_done: true
+        column_types: columnTypes
+        check_header: 1
       )
 
   prepareArrayForPost = (obj, key) ->
@@ -97,6 +101,24 @@ Upload = (() ->
   hasUploaded = () ->
     return id != 0
 
+  setColumnTypes = (t) ->
+    types = $.map(t, (type, i) ->
+      "\"#{type}\""
+    )
+    columnTypes = "[#{types.join(',')}]"
+
+  getColumnTypes = () ->
+    return columnTypes
+
+  setColumnNames = (n) ->
+    names = $.map(n, (name, i) ->
+  	  "\"#{name}\""
+    )
+    columnNames = "[#{names.join(',')}]"
+  
+  getColumnNames = () ->
+    return columnNames
+
   init = () ->
     attachUploadButtonListener()
 
@@ -105,6 +127,10 @@ Upload = (() ->
     getUploadedFrameId: get_id
     uploadAndParse: uploadAndParse
     hasUploaded: hasUploaded
+    setColumnTypes: setColumnTypes
+    getColumnTypes: getColumnTypes
+    setColumnNames: setColumnNames
+    getColumnNames: getColumnNames
   }
 )()
 $.extend(Upload: Upload)

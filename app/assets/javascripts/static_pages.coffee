@@ -6,13 +6,6 @@ $(document).ready ->
   $('.upload-div').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
-  
-  $('.model-div').on('focus', '#data-row input', (e) ->
-    input = $(e.target)
-    choices = input.data('choices')
-    if choices
-      return
-  )
 
   $('.results-div').pushpin({ top: $('.results-div').offset().top })
 
@@ -82,8 +75,7 @@ $(document).ready ->
     e.preventDefault()
     key = $(@).val()
     exclude_model_fields = ['models/data_frame', 'models/algo',
-    'models/response_column_name',
-    'models/output/cross_validation_models', 'models/output/model_summary',
+    'models/response_column_name', 'models/output/cross_validation_models',
     'models/output/scoring_history']
     $.ajax
       url: "#{url}/3/Models/#{key}"
@@ -96,6 +88,7 @@ $(document).ready ->
       success: (res) ->
         dataTable = $('<table></table>')
         modelInputMeta = res.models[0].output
+        trainingFrameUrl = res.models[0].output.training_metrics.frame.URL
         try
           $('.table-div').show()
           dataPoints = $('<thead></thead>')
@@ -119,6 +112,25 @@ $(document).ready ->
           dataTable.append tableRow
           $('.table-div').html(dataTable).fadeIn()
           tableRow.find('select').material_select()
+          $.ajax(
+            method: 'get'
+            url: "#{url}#{trainingFrameUrl}"
+            success: (res) ->
+              columns = res.frames[0].columns
+              inputs = $('#data-row').find('select, input').not('.select-dropdown')
+              inputNames = $.map(inputs, (input, i) ->
+                return $(input).data('name')
+              )
+              $.Upload.setColumnNames(inputNames)
+              dataTypes = $.map(columns, (column, i) ->
+                index = $.inArray(column.label, inputNames)
+                if index >= 0
+                  inputNames.splice(index, 1)
+                  return column.type
+                return
+              )
+              $.Upload.setColumnTypes(dataTypes)
+          )
         catch e
           console.log(e)
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
