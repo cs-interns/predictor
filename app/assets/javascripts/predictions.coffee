@@ -7,7 +7,6 @@ Predictions = (() ->
 
   uploadFromTable = () ->
     data = prepareData()
-    console.log(data.join('\r\n'))
     fileBlob = new Blob([data.join('\r\n')], {type: 'text/csv'})
     $.Upload.uploadAndParse(fileBlob)
     
@@ -16,7 +15,6 @@ Predictions = (() ->
       return $(col).html()
     )
     columnData = $.map($('#data-row').children(), (input, i) ->
-      console.log($(input).find('input').first().val())
       return $(input).find('input').first().val()
     )
     return [columnNames.join(','), columnData.join(',')]
@@ -31,7 +29,6 @@ Predictions = (() ->
       beforeSend: ->
        $('#loading-results').show()
       success: (response) ->
-        console.log response
         prediction = response.model_metrics[0].predictions.columns
         result_index = prediction[0].data[0]+1
         result = prediction[result_index]

@@ -70,7 +70,6 @@ Upload = (() ->
 
   setParseParams = (params, opts) ->
       # set our parameters
-      console.log(columnTypes)
       return $.extend(params,
         destination_frame: "#{get_id()}.hex"
         column_names: columnNames

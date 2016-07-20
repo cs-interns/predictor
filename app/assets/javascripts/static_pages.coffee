@@ -22,14 +22,12 @@ $(document).ready ->
 
   $('.upload-file').change ->
     file = this.files[0]
-    console.log file
     # try
     reader = new FileReader()
     #preview first 10 only
     reader.readAsText(file)
     reader.onload = (e) ->
       fileContent = e.target.result
-      console.log(fileContent)
       arr = fileContent.split("\n").slice(0, 10)
       # remove the last one
       arr_len = arr.length
@@ -55,7 +53,6 @@ $(document).ready ->
       $('.data-label').show()
       $('#predict').show()
       # $('.table-div').find('table').html tableBody
-      console.log arr2
     # catch error
     #   console.log "naay error"
 
