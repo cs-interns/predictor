@@ -64,6 +64,7 @@ Upload = (() ->
         column_names: prepareArrayForPost(params, 'column_names')
         column_types: prepareArrayForPost(params, 'column_types')
         source_frames: "[\"#{opts.frameName}\"]")
+        delete_on_done: true
 
   prepareArrayForPost = (obj, key) ->
     data = $.map obj[key], (item, index) ->
@@ -77,6 +78,7 @@ Upload = (() ->
       method: 'post'
       data:
         source_frames: "[\"#{frameName}\"]"
+        check_header: 1
 
   # public
   get_id = () ->
