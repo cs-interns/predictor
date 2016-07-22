@@ -22,7 +22,7 @@ $(document).ready ->
   $('.show-button').click ->
     label = $(this)
     $('.model-details').slideToggle ->
-      if ($(this).is(':visible')) 
+      if ($(this).is(':visible'))
         label.text('Show Less Details')
       else
         label.text('Show More Details')
@@ -86,8 +86,8 @@ $(document).ready ->
     key = $(@).val()
     exclude_model_fields = ['models/data_frame', 'models/algo',
     'models/response_column_name', 'models/output/domains',
-    'models/output/cross_validation_models', 'models/output/model_summary',
-    'models/output/scoring_history']
+    'models/output/cross_validation_models'] # , 'models/output/model_summary',
+    # 'models/output/scoring_history']
     $.ajax
       url: "#{url}/3/Models/#{key}"
       data: {'_exclude_fields': exclude_model_fields.join(",")}
@@ -97,11 +97,12 @@ $(document).ready ->
         $('#loading').show()
         $('.table-div').hide()
       success: (res) ->
+        console.log $.ModelDetails.showModelDetail(res.models[0])
         model = res.models[0].output.names
         dataTable = $('<table></table>')
         try
           $('.table-div').show()
-          console.log(model)
+          # console.log(model)
           dataPoints = $('<thead></thead>')
           columns = $.map res.models[0].output.names, (col, i) ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
