@@ -7,6 +7,8 @@ $(document).ready ->
   $('.upload-div').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
+  $('.show-button').hide()
+  $('.model-details').hide()
 
   $('.results-div').pushpin({ top: $('.results-div').offset().top })
 
@@ -15,6 +17,15 @@ $(document).ready ->
       $('.results-div').addClass('push-m7 push-s7 push-l7')
     else if ($('.results-div').hasClass('pin-top'))
       $('.results-div').removeClass('push-m7 push-s7 push-l7')
+
+
+  $('.show-button').click ->
+    label = $(this)
+    $('.model-details').slideToggle ->
+      if ($(this).is(':visible')) 
+        label.text('Show Less Details')
+      else
+        label.text('Show More Details')
 
 
   $('.upload-button').click (e)->

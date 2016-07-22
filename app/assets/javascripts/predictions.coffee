@@ -32,6 +32,7 @@ Predictions = (() ->
           $('.confidence-rate-label').html("Confidence: "+confidence.toFixed(2)+"%").fadeIn()
           $('.model-rate-label').html("Model Accuracy: "+model_rate.toFixed(2)+"%").fadeIn()
           $('#loading-results').hide()
+          $('.show-button').show()
 
   return {
     predict: predict
