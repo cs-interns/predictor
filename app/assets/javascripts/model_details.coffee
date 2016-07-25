@@ -41,26 +41,26 @@ ModelDetails = (() ->
     tbdy.append(tr)
     console.log column_name.join('\t')
     for row, r in sum_data
-     row_data = []
-     trr = $('<tr>')
-     for col, c in sum_cols
-       unless c is 0 or typeof sum_data[c][r] is 'undefined'
-         if typeof sum_data[c][r] is 'number'
-           row_data.push parseFloat(sum_data[c][r]).toFixed(2)
-           celldata = parseFloat(sum_data[c][r]).toFixed(2)
-           td = $('<td>')
-           td.html("#{celldata}")
-           trr.append(td)
-         else
-           row_data.push sum_data[c][r]
-           td = $('<td>')
-           td.html("#{sum_data[c][r]}")
-           trr.append(td)
-     tbdy.append(trr)
-     console.log row_data.join('\t')
+      row_data = []
+      trr = $('<tr>')
+      for col, c in sum_cols
+        unless c is 0 or typeof sum_data[c][r] is 'undefined'
+          if typeof sum_data[c][r] is 'number'
+            row_data.push parseFloat(sum_data[c][r]).toFixed(2)
+            celldata = parseFloat(sum_data[c][r]).toFixed(2)
+            td = $('<td>')
+            td.html("#{celldata}")
+            trr.append(td)
+          else
+            row_data.push sum_data[c][r]
+            td = $('<td>')
+            td.html("#{sum_data[c][r]}")
+            trr.append(td)
+      tbdy.append(trr)
+      console.log row_data.join('\t')
 
-     tbl.append(tbdy)
-     dom.append(tbl)
+    tbl.append(tbdy)
+    dom.append(tbl)
 
 
   return {
