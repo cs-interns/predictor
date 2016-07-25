@@ -1,8 +1,11 @@
 ModelDetails = (() ->
+  model = undefined
+  view = undefined
 
-  showModelDetail = (model, domy) ->
+  showModelDetail = (the_model, domy) ->
+    model = the_model
     dom = domy.children().first()
-    console.log dom
+    view = dom
     console.log model
     ###################### MODEL SUMMARY ######################
     dom.empty()
@@ -17,7 +20,7 @@ ModelDetails = (() ->
 
     # not yet implemented. Depends on the algorithm used
     console.log "Training Metrics: #{output.training_metrics}"
-    console.log "Validation Metrics: #{output.validation_metrics}"
+    console.log "Validation Metrics: #{output.cross_validation_metrics}"
 
     summary = output.model_summary
     sum_cols = summary.columns
@@ -39,7 +42,6 @@ ModelDetails = (() ->
        td.html("#{col.description}")
        tr.append(td)
     tbdy.append(tr)
-    console.log column_name.join('\t')
     for row, r in sum_data
       row_data = []
       trr = $('<tr>')
@@ -57,11 +59,76 @@ ModelDetails = (() ->
             td.html("#{sum_data[c][r]}")
             trr.append(td)
       tbdy.append(trr)
-      console.log row_data.join('\t')
 
     tbl.append(tbdy)
     dom.append(tbl)
+    plotStandardCoefRatio() if model.algo is 'glm'
+    plotLogLoss() if model.algo is 'deeplearning'
 
+
+  plotStandardCoefRatio = () ->
+    bardiv = $('<div>')
+    # bardiv.attr({'width':0, 'height':0})
+    bardiv.attr('id', 'bar-plot')
+    view.append bardiv
+
+    coefratio = model.output.standardized_coefficient_magnitudes
+    coefratiodata = coefratio.data
+
+    pos_color = 'rgba(54, 162, 235, 1)' # Blue
+    neg_color = 'rgba(255, 99, 132, 1)' # Red
+
+    coef_labels = []
+    coef_data = []
+    coef_color = []
+    coef_labels.push("#{value} (#{coefratio.data[2][c]})") for value, c in coefratio.data[0].slice 0, -1
+    coef_data.push(value) for value in coefratio.data[1].slice 0, -1
+
+
+    for value in coefratio.data[2].slice 0, -1
+        if value == 'NEG'
+          coef_color.push(neg_color)
+        else
+          if value == 'POS'
+            coef_color.push(pos_color)
+
+    dataset = [{
+      type: 'bar',
+      x: coef_data,
+      y: coef_labels,
+      marker: {
+        color: coef_color,
+        width: 1
+        },
+      orientation: 'h'
+    }]
+
+    Plotly.newPlot('bar-plot', dataset, title: coefratio.description)
+
+  plotLogLoss = () ->
+    scoring_history = model.output.scoring_history
+    epochs = scoring_history.data[4]
+    logloss = scoring_history.data[9]
+
+    loglossdiv = $('<div>')
+    loglossdiv.attr('id', 'logloss-plot')
+    view.append loglossdiv
+    data_points = {
+      x: epochs.splice(1, epochs.length),
+      y: logloss.splice(1, logloss.length),
+      type: 'lines+markers'
+    }
+    logloss_layout = {
+      title: "Scoring History - #{scoring_history.columns[9].description}"
+      xaxis: {
+        title: scoring_history.columns[4].description
+      },
+      yaxis: {
+        title: scoring_history.columns[9].description
+      }
+    }
+
+    Plotly.newPlot('logloss-plot', [data_points], logloss_layout)
 
   return {
     showModelDetail: showModelDetail
