@@ -1,16 +1,27 @@
 url = 'http://139.59.249.87'
 
 $(document).ready ->
+  $('.modal-trigger').leanModal();
   $('.models-list').hide()
   $('#loading').show()
   $('#predict').hide()
   $('.upload-div').hide()
+  $('#model-specs').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
   $('.show-button').hide()
   $('.model-details').hide()
 
   $('.results-div').pushpin({ top: $('.results-div').offset().top })
+
+  $('#model-specs').on('click', '#detail-trigger', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+  )
+
+  $('.modal-footer').on('click', '.modal-close', (e) ->
+    e.preventDefault()
+  )
 
   $(window).on "scroll", () ->
     if($('.results-div').hasClass('pinned'))
@@ -97,7 +108,6 @@ $(document).ready ->
         $('#loading').show()
         $('.table-div').hide()
       success: (res) ->
-        console.log $.ModelDetails.showModelDetail(res.models[0])
         model = res.models[0].output.names
         dataTable = $('<table></table>')
         try
@@ -109,10 +119,12 @@ $(document).ready ->
             dataPoints
           dataTable.addClass('responsive-table striped view-data').append columns
           $('.table-div').html(dataTable).fadeIn()
+          $.ModelDetails.showModelDetail res.models[0], $('#modal1')
         catch e
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
+          $('#model-specs').fadeIn('slow')
           $('.feature-label').show()
           $('.data-label').show()
           $('.upload-div').show()
