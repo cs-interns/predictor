@@ -1,46 +1,45 @@
 ModelDetails = (() ->
 
-  showModelDetail = (model) ->
+  showModelDetail = (model, domy) ->
+    dom = domy.children().first()
+    console.log dom
     console.log model
-    console.log "Model ID: #{model.model_id.name}"
-    console.log "Algorithm used: #{model.algo_full_name}"
-    console.log "Schema: #{model.output.__meta.schema_name}"
+    ###################### MODEL SUMMARY ######################
+    dom.empty()
+
+    dom.append $('<h4>').text "Model ID: #{model.model_id.name}"
+    dom.append $('<p>').text "Algorithm used: #{model.algo_full_name}"
+    dom.append $('<p>').text "Schema: #{model.output.__meta.schema_name}"
 
     output = model.output
 
-    console.log "Model Category: #{output.model_category}"
+    dom.append $('<p>').text "Model Category: #{output.model_category}"
+
+    # not yet implemented. Depends on the algorithm used
     console.log "Training Metrics: #{output.training_metrics}"
     console.log "Validation Metrics: #{output.validation_metrics}"
 
-
-    ###################### MODEL SUMMARY ######################
     summary = output.model_summary
     sum_cols = summary.columns
     sum_data = summary.data
 
     # show description of model summary
-    console.log "#{summary.description}"
+    dom.append $('<h5>').text "Model Summary #{summary.description}"
 
+    column_name = []
     for col, c in sum_cols
-      unless c is 0
-        column_data = sum_data[c].join('\t')
-        console.log "#{col.description} | #{column_data}"
-
-
-    # column_name = []
-    # for col, c in sum_cols
-    #   unless c is 0
-    #     column_name.push col.description
-    # console.log column_name.join('\t')
-    # for row, r in sum_data
-    #   row_data = []
-    #   for col, c in sum_cols
-    #     unless c is 0
-    #       if typeof sum_data[c][r] is 'number'
-    #         row_data.push parseFloat(sum_data[c][r]).toFixed(2)
-    #       else
-    #         row_data.push sum_data[c][r]
-    #   console.log row_data.join('\t')
+     unless c is 0
+       column_name.push col.description
+    console.log column_name.join('\t')
+    for row, r in sum_data
+     row_data = []
+     for col, c in sum_cols
+       unless c is 0
+         if typeof sum_data[c][r] is 'number'
+           row_data.push parseFloat(sum_data[c][r]).toFixed(2)
+         else
+           row_data.push sum_data[c][r]
+     console.log row_data.join('\t')
 
 
   return {
