@@ -15,27 +15,12 @@ ModelDetails = (() ->
     sum_cols = summary.columns
     sum_data = summary.data
 
-    dom.append $('<h4>').text "Details for #{model.model_id.name} Model"
-    dom.append $('<h6>').text "Model Summary #{summary.description}"
+    dom.append $("<h4><b>Details for #{model.model_id.name} model</b></h4>")
+    if summary.description
+      dom.append $("<p>#{summary.name} (#{summary.description})<p>".toUpperCase())
+    else
+      dom.append $("<p>#{summary.name}</p>".toUpperCase())
 
-    dom.append $('<p>').text "Algorithm used: #{model.algo_full_name}"
-    dom.append $('<p>').text "Schema: #{model.output.__meta.schema_name}"
-    dom.append $('<p>').text "Model Category: #{output.model_category}"
-
-
-    # show confusion matrix
-    if model.algo is "drf" or model.algo is "deeplearning"
-      unless output.training_metrics is null
-        training_cm = output.training_metrics.cm.table
-        showConfusionMatrix("Training Metrics",training_cm,dom)
-      unless output.validation_metrics is null
-        validation_cm = output.validation_metrics.cm.table
-        showConfusionMatrix("Validation Metrics",validation_cm,dom)
-      unless output.cross_validation_metrics is null
-        cross_validation_cm = output.cross_validation_metrics.cm.table
-        showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom)
-
-    
     tbl = $('<table>')
     tbl.addClass("responsive-table striped")
     tbdy = $('<tbody>')
@@ -66,9 +51,33 @@ ModelDetails = (() ->
             td.html("#{sum_data[c][r]}")
             trr.append(td)
       tbdy.append(trr)
-
     tbl.append(tbdy)
     dom.append(tbl)
+
+    #more parameters
+    dom.append $("<p>
+      <b>Algorithm used:</b> #{model.algo_full_name}<br>
+      <b>Schema:</b> #{model.output.__meta.schema_name}<br>
+      <b>Model Category:</b> #{output.model_category}
+    </p>")
+
+    # show confusion matrix
+    if model.algo is "drf" or model.algo is "deeplearning"
+      unless output.training_metrics is null
+        training_cm = output.training_metrics.cm.table
+        showConfusionMatrix("Training Metrics",training_cm,dom)
+        dom.append $('<br>')
+      unless output.validation_metrics is null
+        validation_cm = output.validation_metrics.cm.table
+        showConfusionMatrix("Validation Metrics",validation_cm,dom)
+        dom.append $('<br>')
+      unless output.cross_validation_metrics is null
+        cross_validation_cm = output.cross_validation_metrics.cm.table
+        showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom)
+        dom.append $('<br>')
+
+    
+
     plotStandardCoefRatio() if model.algo is 'glm'
     plotLogLoss() if model.algo is 'deeplearning'
     plotMSE() if model.algo is 'deeplearning'
