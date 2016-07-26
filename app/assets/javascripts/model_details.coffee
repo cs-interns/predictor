@@ -98,7 +98,7 @@ ModelDetails = (() ->
         if c is 0
           trainingCmRow.append("<td><b>#{cols[r].description}</b></td>")
         else if c-1 == r
-          trainingCmRow.append("<td class = 'yellow'>#{cols[r]}</td>")
+          trainingCmRow.append("<td class = 'yellow lighten-3'>#{cols[r]}</td>")
         else
           trainingCmRow.append("<td>#{cols[r]}</td>")
       trainingCmRow.appendTo(trainingCmBody)
