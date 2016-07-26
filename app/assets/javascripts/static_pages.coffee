@@ -95,7 +95,7 @@ $(document).ready ->
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
-    exclude_model_fields = ['models/data_frame', 'models/algo',
+    exclude_model_fields = ['models/data_frame', #'models/algo',
     'models/response_column_name', 'models/output/domains',
     'models/output/cross_validation_models'] # , 'models/output/model_summary',
     # 'models/output/scoring_history']
@@ -121,6 +121,7 @@ $(document).ready ->
           $('.table-div').html(dataTable).fadeIn()
           $.ModelDetails.showModelDetail res.models[0], $('#modal1')
         catch e
+          console.log e
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
