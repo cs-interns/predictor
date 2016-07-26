@@ -10,7 +10,7 @@ ModelDetails = (() ->
     ###################### MODEL SUMMARY ######################
     dom.empty()
 
-    dom.append $('<h4>').text "Model ID: #{model.model_id.name}"
+    dom.append $('<h4>').html "<b>Model ID:</b> #{model.model_id.name}"
     dom.append $('<p>').text "Algorithm used: #{model.algo_full_name}"
     dom.append $('<p>').text "Schema: #{model.output.__meta.schema_name}"
 
@@ -62,9 +62,12 @@ ModelDetails = (() ->
 
     tbl.append(tbdy)
     dom.append(tbl)
+    plotXYscoringHistory('logloss-div', 4, 9, 13) if model.algo is 'deeplearning'
+    plotXYscoringHistory('mse-div', 4, 7, 11) if model.algo is 'deeplearning'
+    plotXYscoringHistory('drf-logloss-div', 3, 5, 11) if model.algo is 'drf'
+    plotXYscoringHistory('drf-mse-div', 3, 4, 11) if model.algo is 'drf'
+    plotHorizBarChart(model.output.variable_importances, 'drf-mse-div', 0, 2) if model.algo is 'drf'
     plotStandardCoefRatio() if model.algo is 'glm'
-    plotLogLoss() if model.algo is 'deeplearning'
-    plotMSE() if model.algo is 'deeplearning'
 
 
   plotStandardCoefRatio = () ->
@@ -102,98 +105,86 @@ ModelDetails = (() ->
         width: 1
         },
       orientation: 'h',
-      name: coefratio.description
+      name: coefratio.name
     }]
 
-    Plotly.newPlot('bar-plot', dataset, {title: coefratio.description, showlegend: true})
+    Plotly.newPlot('bar-plot', dataset, {title: coefratio.name, showlegend: true})
 
-  #---------------------------------- LogLoss ----------------------------------
-  plotLogLoss = () ->
+  #------------------------------- Horiz Bar Chart -------------------------------
+  plotHorizBarChart = (y_variable, div_id, x_index, y_index) ->
+    bardiv = $('<div>')
+    bardiv.attr({'id': div_id, 'align': 'center'})
+    view.append bardiv
+
+    variable = y_variable
+    variabledata = variable.data
+
+    blue_color = 'rgba(54, 162, 235, 1)'
+
+    var_labels = []
+    var_data = []
+    var_labels.push(value) for value, c in variable.data[x_index].slice 0, -1
+    var_data.push(value) for value in variable.data[y_index].slice 0, -1
+
+    dataset = [{
+      type: 'bar',
+      x: var_data,
+      y: var_labels,
+      marker: {
+        color: blue_color,
+        width: 1
+        },
+      orientation: 'h',
+      name: variable.name
+    }]
+
+    Plotly.newPlot(div_id, dataset, {title: variable.name, showlegend: true})
+
+
+  #------------------------------- Logloss, MSE -------------------------------
+  plotXYscoringHistory = (div_id, x_index, y_index, y_index_val) ->
     scoring_history = model.output.scoring_history
-    epochs = scoring_history.data[4]
-    logloss = scoring_history.data[9]
+    epochs = scoring_history.data[x_index]
+    variable = scoring_history.data[y_index]
 
-    loglossdiv = $('<div>')
-    loglossdiv.attr('id', 'logloss-plot')
-    view.append loglossdiv
+    variablediv = $('<div>')
+    variablediv.attr('id', div_id)
+    view.append variablediv
     training_data_points = {
       x: epochs.slice(1, epochs.length),
-      y: logloss.slice(1, logloss.length),
-      type: 'lines+markers',
-      name: scoring_history.columns[9].description
+      y: variable.slice(1, variable.length),
+      mode: 'lines+markers',
+      type: 'scatter'
+      name: scoring_history.columns[y_index].description
     }
-    logloss_dataset = [training_data_points]
-    y_axis_title = [scoring_history.columns[9].description]
+    variable_dataset = [training_data_points]
+    y_axis_title = [scoring_history.columns[y_index].description]
 
-    val_logloss = scoring_history.data[13]
-    unless val_logloss is undefined
+    val_variable = scoring_history.data[y_index_val]
+    unless val_variable is undefined
       validation_data_points = {
         x: epochs.slice(1, epochs.length),
-        y: val_logloss.slice(1, val_logloss.length),
-        type: 'lines+markers',
-        name: scoring_history.columns[13].description
+        y: val_variable.slice(1, val_variable.length),
+        mode: 'lines+markers',
+        type: 'scatter'
+        name: scoring_history.columns[y_index_val].description
       }
-      logloss_dataset.push validation_data_points
-      y_axis_title.push scoring_history.columns[13].description
+      variable_dataset.push validation_data_points
+      y_axis_title.push scoring_history.columns[y_index_val].description
 
 
-    logloss_layout = {
-      title: "Scoring History - Epochs vs LogLoss Plot",
+    variable_layout = {
+      title: "Scoring History - Epochs vs #{scoring_history.columns[y_index].description.split(" ")[1]} Plot",
       showlegend: true,
       xaxis: {
-        title: scoring_history.columns[4].description
+        title: scoring_history.columns[x_index].description
       },
       yaxis: {
         title: y_axis_title.join(', ')
       }
     }
 
-    Plotly.newPlot('logloss-plot', logloss_dataset, logloss_layout)
-
-  #---------------------------------- MSE ----------------------------------
-  plotMSE = () ->
-    scoring_history = model.output.scoring_history
-    epochs = scoring_history.data[4]
-    mse = scoring_history.data[7]
-
-    msediv = $('<div>')
-    msediv.attr('id', 'mse-plot')
-    view.append msediv
-    training_data_points = {
-      x: epochs.slice(1, epochs.length),
-      y: mse.slice(1, mse.length),
-      type: 'lines+markers',
-      name: scoring_history.columns[7].description
-    }
-    mse_dataset = [training_data_points]
-    y_axis_title = [scoring_history.columns[7].description]
-
-    val_mse = scoring_history.data[11]
-    unless val_mse is undefined
-      validation_data_points = {
-        x: epochs.slice(1, epochs.length),
-        y: val_mse.slice(1, val_mse.length),
-        type: 'lines+markers',
-        name: scoring_history.columns[11].description
-      }
-      mse_dataset.push validation_data_points
-      y_axis_title.push scoring_history.columns[11].description
-
-
-    mse_layout = {
-      title: "Scoring History - Epochs vs LogLoss Plot",
-      showlegend: true,
-      xaxis: {
-        title: scoring_history.columns[4].description
-      },
-      yaxis: {
-        title: y_axis_title.join(', ')
-      }
-    }
-
-    Plotly.newPlot('mse-plot', mse_dataset, mse_layout)
-
-
+    Plotly.newPlot(div_id, variable_dataset, variable_layout)
 
 
   return {
