@@ -21,8 +21,15 @@ ModelDetails = (() ->
     sum_cols = summary.columns
     sum_data = summary.data
 
-    showConfusionMatrix(output,dom) if model.algo is "deeplearning" or model.algo is "drf"
 
+
+    training_cm = output.training_metrics.cm.table
+    validation_cm = output.validation_metrics.cm.table
+    cross_validation_cm = output.cross_validation_metrics.cm.table
+    # show confusion matrix
+    showConfusionMatrix("Training Metrics",training_cm,dom) unless null
+    showConfusionMatrix("Validation Metrics",validation_cm,dom) unless null
+    showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom) unless null
     # show description of model summary
     dom.append $('<h5>').text "Model Summary #{summary.description}"
 
@@ -62,31 +69,29 @@ ModelDetails = (() ->
      tbl.append(tbdy)
      dom.append(tbl)
 
-  showConfusionMatrix = (output,dom)->
-    training_cm = output.training_metrics.cm.table
-    training_cm_col = training_cm.columns
-    training_cm_data = training_cm.data
+  showConfusionMatrix = (title,cm,dom)->
+    cm_col = cm.columns
+    cm_data = cm.data
 
-    # show confusion matrix of model
-    dom.append $('<h5>').text "Training Metrics - Confusion Metrics"
+    dom.append $('<h5>').text "#{title}"+ " - " +"#{cm.name}"
     trainingCmTable = $('<table>')
     trainingCmTable.addClass("responsive-table striped")
     trainingCmHeaders = $('<thead>')
     trainingCmBody = $('<tbody>')
-    rowHead = training_cm_col.slice(0,-2)
+    rowHead = cm_col.slice(0,-2)
     bufferRowHead = {description:"Total"}
     rowHead.push bufferRowHead
     console.log rowHead
-    training_cm_data.unshift rowHead
+    cm_data.unshift rowHead
     bufferCol = {description:" "}
-    training_cm_col.unshift(bufferCol)
-    for col in training_cm_col
+    cm_col.unshift(bufferCol)
+    for col in cm_col
       trainingCmHeaders.append("<th>#{col.description}</th>")
     trainingCmHeaders.appendTo(trainingCmTable)
-    console.log training_cm_col
-    for data, r in training_cm_data[0]
+    console.log cm_col
+    for data, r in cm_data[0]
       trainingCmRow = $('<tr>')
-      for cols, c in training_cm_data
+      for cols, c in cm_data
         if c == 0
           trainingCmRow.append("<td><b>#{cols[r].description}</b></td>")
         else
