@@ -21,6 +21,9 @@ ModelDetails = (() ->
     else
       dom.append $("<p>#{summary.name}</p>".toUpperCase())
 
+    # show description of model summary
+    dom.append $('<h5>').text "Model Summary #{summary.description}"
+
     tbl = $('<table>')
     tbl.addClass("responsive-table striped")
     tbdy = $('<tbody>')
@@ -76,7 +79,7 @@ ModelDetails = (() ->
         showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom)
         dom.append $('<br>')
 
-    
+
 
     plotStandardCoefRatio() if model.algo is 'glm'
     plotLogLoss() if model.algo is 'deeplearning'
