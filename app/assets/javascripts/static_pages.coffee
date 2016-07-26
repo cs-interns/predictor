@@ -59,7 +59,7 @@ $(document).ready ->
       arr2 = []
       for line in arr
         arr2.push line.split(",")
-      dataTable = $('<table></table>')
+      dataTable = $('<table>', {id: 'preview-table'})
       tableHead = $('<thead></thead>')
       tableBody = $('<tbody></tbody>')
       for lines in arr2
