@@ -23,13 +23,18 @@ ModelDetails = (() ->
 
 
 
-    training_cm = output.training_metrics.cm.table
-    validation_cm = output.validation_metrics.cm.table
-    cross_validation_cm = output.cross_validation_metrics.cm.table
     # show confusion matrix
-    showConfusionMatrix("Training Metrics",training_cm,dom) unless null
-    showConfusionMatrix("Validation Metrics",validation_cm,dom) unless null
-    showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom) unless null
+    if model.algo is "drf" or model.algo is "deeplearning"
+      unless output.training_metrics is null
+        training_cm = output.training_metrics.cm.table
+        showConfusionMatrix("Training Metrics",training_cm,dom)
+      unless output.validation_metrics is null
+        validation_cm = output.validation_metrics.cm.table
+        showConfusionMatrix("Validation Metrics",validation_cm,dom)
+      unless output.cross_validation_metrics is null
+        cross_validation_cm = output.cross_validation_metrics.cm.table
+        showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom)
+
     # show description of model summary
     dom.append $('<h5>').text "Model Summary #{summary.description}"
 
@@ -81,19 +86,19 @@ ModelDetails = (() ->
     rowHead = cm_col.slice(0,-2)
     bufferRowHead = {description:"Total"}
     rowHead.push bufferRowHead
-    console.log rowHead
     cm_data.unshift rowHead
     bufferCol = {description:" "}
     cm_col.unshift(bufferCol)
     for col in cm_col
       trainingCmHeaders.append("<th>#{col.description}</th>")
     trainingCmHeaders.appendTo(trainingCmTable)
-    console.log cm_col
     for data, r in cm_data[0]
       trainingCmRow = $('<tr>')
       for cols, c in cm_data
-        if c == 0
+        if c is 0
           trainingCmRow.append("<td><b>#{cols[r].description}</b></td>")
+        else if c == r
+          trainingCmRow.append("<td class = 'yellow'>#{cols[r]}</td>")
         else
           trainingCmRow.append("<td>#{cols[r]}</td>")
       trainingCmRow.appendTo(trainingCmBody)
