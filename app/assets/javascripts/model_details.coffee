@@ -64,6 +64,7 @@ ModelDetails = (() ->
     dom.append(tbl)
     plotStandardCoefRatio() if model.algo is 'glm'
     plotLogLoss() if model.algo is 'deeplearning'
+    plotMSE() if model.algo is 'deeplearning'
 
 
   plotStandardCoefRatio = () ->
@@ -100,11 +101,13 @@ ModelDetails = (() ->
         color: coef_color,
         width: 1
         },
-      orientation: 'h'
+      orientation: 'h',
+      name: coefratio.description
     }]
 
-    Plotly.newPlot('bar-plot', dataset, title: coefratio.description)
+    Plotly.newPlot('bar-plot', dataset, {title: coefratio.description, showlegend: true})
 
+  #---------------------------------- LogLoss ----------------------------------
   plotLogLoss = () ->
     scoring_history = model.output.scoring_history
     epochs = scoring_history.data[4]
@@ -113,22 +116,85 @@ ModelDetails = (() ->
     loglossdiv = $('<div>')
     loglossdiv.attr('id', 'logloss-plot')
     view.append loglossdiv
-    data_points = {
-      x: epochs.splice(1, epochs.length),
-      y: logloss.splice(1, logloss.length),
-      type: 'lines+markers'
+    training_data_points = {
+      x: epochs.slice(1, epochs.length),
+      y: logloss.slice(1, logloss.length),
+      type: 'lines+markers',
+      name: scoring_history.columns[9].description
     }
+    logloss_dataset = [training_data_points]
+    y_axis_title = [scoring_history.columns[9].description]
+
+    val_logloss = scoring_history.data[13]
+    unless val_logloss is undefined
+      validation_data_points = {
+        x: epochs.slice(1, epochs.length),
+        y: val_logloss.slice(1, val_logloss.length),
+        type: 'lines+markers',
+        name: scoring_history.columns[13].description
+      }
+      logloss_dataset.push validation_data_points
+      y_axis_title.push scoring_history.columns[13].description
+
+
     logloss_layout = {
-      title: "Scoring History - #{scoring_history.columns[9].description}"
+      title: "Scoring History - Epochs vs LogLoss Plot",
+      showlegend: true,
       xaxis: {
         title: scoring_history.columns[4].description
       },
       yaxis: {
-        title: scoring_history.columns[9].description
+        title: y_axis_title.join(', ')
       }
     }
 
-    Plotly.newPlot('logloss-plot', [data_points], logloss_layout)
+    Plotly.newPlot('logloss-plot', logloss_dataset, logloss_layout)
+
+  #---------------------------------- MSE ----------------------------------
+  plotMSE = () ->
+    scoring_history = model.output.scoring_history
+    epochs = scoring_history.data[4]
+    mse = scoring_history.data[7]
+
+    msediv = $('<div>')
+    msediv.attr('id', 'mse-plot')
+    view.append msediv
+    training_data_points = {
+      x: epochs.slice(1, epochs.length),
+      y: mse.slice(1, mse.length),
+      type: 'lines+markers',
+      name: scoring_history.columns[7].description
+    }
+    mse_dataset = [training_data_points]
+    y_axis_title = [scoring_history.columns[7].description]
+
+    val_mse = scoring_history.data[11]
+    unless val_mse is undefined
+      validation_data_points = {
+        x: epochs.slice(1, epochs.length),
+        y: val_mse.slice(1, val_mse.length),
+        type: 'lines+markers',
+        name: scoring_history.columns[11].description
+      }
+      mse_dataset.push validation_data_points
+      y_axis_title.push scoring_history.columns[11].description
+
+
+    mse_layout = {
+      title: "Scoring History - Epochs vs LogLoss Plot",
+      showlegend: true,
+      xaxis: {
+        title: scoring_history.columns[4].description
+      },
+      yaxis: {
+        title: y_axis_title.join(', ')
+      }
+    }
+
+    Plotly.newPlot('mse-plot', mse_dataset, mse_layout)
+
+
+
 
   return {
     showModelDetail: showModelDetail
