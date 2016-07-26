@@ -13,16 +13,28 @@
 
       <!-- LOADER STUFF IS HERE -->
       <div id="loading" class="center">
-      <!-- this is the loading gif -->
-      <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+        <!-- this is the loading gif -->
+        <%= image_tag('icons/load.svg', :alt => 'Loading') %>
       </div>
 
-      <div class="row">
+      <div class="row" id="model-specs" align="center">
+        <!-- show Model details trigger -->
+        <a class="waves-effect waves-light btn modal-trigger" id="detail-trigger" href="#modal1">Show Model Details</a>
         <h5 class="feature-label center">Features</h5>
-        <div class="table-div col s12 m12 l12" >
+        <div class="table-div col s12 m12 l12" ></div>
+      </div>
 
+      <!-- Model Details -->
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h4>Hey man</h4>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
       </div>
+      <!-- ###################################-->
+
 
       <div class="row">
         <h5 class="data-label center">Data Preview</h5>
@@ -38,8 +50,8 @@
         </form>
         <!-- LOADER STUFF IS HERE -->
         <div id="loading-upload" class="center">
-        <!-- this is the loading gif -->
-        <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+          <!-- this is the loading gif -->
+          <%= image_tag('icons/load.svg', :alt => 'Loading') %>
         </div>
       </div>
 
@@ -51,12 +63,19 @@
       <h3 class="center">Predicted Classification</h3>
       <!-- LOADER STUFF IS HERE -->
       <div id="loading-results" class="center">
-      <!-- this is the loading gif -->
-      <img src="https://www.codeschool.com/assets/icons/icon-animated-loader-e2fdd92fc93384bc6baf3865e6ac0d11.svg">
+        <!-- this is the loading gif -->
+        <%= image_tag('icons/load.svg', :alt => 'Loading') %>
       </div>
       <h5 class="result-label center"><h5>
       <h6 class="confidence-rate-label center"></h6>
       <h6 class="model-rate-label center"></h6>
+      <br>
+      <div class="center">
+        <button class="show-button btn">Show More Details</button>
+      </div>
+      <div class="model-details center">
+        This is a sample detail
+      </div>
     </div>
   </div>
 

@@ -1,20 +1,42 @@
 url = 'http://139.59.249.87'
 
 $(document).ready ->
+  $('.modal-trigger').leanModal();
   $('.models-list').hide()
   $('#loading').show()
   $('#predict').hide()
   $('.upload-div').hide()
+  $('#model-specs').hide()
   $('.feature-label').hide()
   $('.data-label').hide()
+  $('.show-button').hide()
+  $('.model-details').hide()
 
   $('.results-div').pushpin({ top: $('.results-div').offset().top })
+
+  $('#model-specs').on('click', '#detail-trigger', (e) ->
+    e.preventDefault()
+    e.stopPropagation()
+  )
+
+  $('.modal-footer').on('click', '.modal-close', (e) ->
+    e.preventDefault()
+  )
 
   $(window).on "scroll", () ->
     if($('.results-div').hasClass('pinned'))
       $('.results-div').addClass('push-m7 push-s7 push-l7')
     else if ($('.results-div').hasClass('pin-top'))
       $('.results-div').removeClass('push-m7 push-s7 push-l7')
+
+
+  $('.show-button').click ->
+    label = $(this)
+    $('.model-details').slideToggle ->
+      if ($(this).is(':visible'))
+        label.text('Show Less Details')
+      else
+        label.text('Show More Details')
 
 
   $('.upload-button').click (e)->
@@ -73,10 +95,10 @@ $(document).ready ->
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
-    exclude_model_fields = ['models/data_frame', 'models/algo',
+    exclude_model_fields = ['models/data_frame', # 'models/algo',
     'models/response_column_name', 'models/output/domains',
-    'models/output/cross_validation_models', 'models/output/model_summary',
-    'models/output/scoring_history']
+    'models/output/cross_validation_models'] # , 'models/output/model_summary',
+    # 'models/output/scoring_history']
     $.ajax
       url: "#{url}/3/Models/#{key}"
       data: {'_exclude_fields': exclude_model_fields.join(",")}
@@ -90,17 +112,20 @@ $(document).ready ->
         dataTable = $('<table></table>')
         try
           $('.table-div').show()
-          console.log(model)
+          # console.log(model)
           dataPoints = $('<thead></thead>')
           columns = $.map res.models[0].output.names, (col, i) ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
             dataPoints
           dataTable.addClass('responsive-table striped view-data').append columns
           $('.table-div').html(dataTable).fadeIn()
+          $.ModelDetails.showModelDetail res.models[0], $('#modal1')
         catch e
+          console.log e
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
+          $('#model-specs').fadeIn('slow')
           $('.feature-label').show()
           $('.data-label').show()
           $('.upload-div').show()
