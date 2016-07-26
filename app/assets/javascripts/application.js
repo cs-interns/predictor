@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require materialize-sprockets
 //= require turbolinks
+//= require Plotly
 //= require upload_file.coffee
 //= require predictions.coffee
 //= require static_pages.coffee

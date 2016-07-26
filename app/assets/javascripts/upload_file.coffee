@@ -2,21 +2,36 @@ Upload = (() ->
   # private
   id = 0
   id_len = 6
+  columnNames = []
+  columnTypes = []
 
 
   uploadAndPredict = (e) ->
       if $(e.target).siblings('input')[0].files.length == 0
         return false
       id = 0  # clear id, new file upload
-      upload = uploadFile()
-      upload.done (response) ->
-        # parse
-        parseFrame get_id()
-      return false;
+      uploadPromise = uploadFile()
+      framePromise = getTrainingFrame()
+      $.when(uploadPromise, framePromise).then((uploadResponse, frameResponse) ->
+        uploadedColumnNames = $.map($('#preview-table thead').children(), (td, i) ->
+          return td.innerHTML
+        )
+        trainingColumns = frameResponse.frames[0].columns
+        columns = $.map(trainingColumns, (trainingColumn, i) ->
+          if $.inArray(trainingColumn.label, uploadedColumnNames) >= 0
+            return {name: trainingColumn.label, type: trainingColumn.type}
+        )
+        $.each(columns, (i, column) ->
+          columnNames.push(column.name)
+          columnTypes.push(column.type)
+        )
+        parseFrame(get_id())
+      )
+      return false
 
   uploadFile = () ->
     fd = new FormData($('form')[0])
-    $.ajax
+    return $.ajax
       url: "http://139.59.249.87/3/PostFile?destination_frame=#{encodeURIComponent(get_id())}"
       data: fd
       method: 'post'
@@ -61,22 +76,42 @@ Upload = (() ->
       # set our parameters
       return $.extend(params,
         destination_frame: "#{get_id()}.hex"
-        column_names: prepareArrayForPost(params, 'column_names')
-        column_types: prepareArrayForPost(params, 'column_types')
-        source_frames: "[\"#{opts.frameName}\"]")
+        column_names: prepareArrayForPost(columnNames)
+        column_types: prepareArrayForPost(columnTypes)
+        source_frames: "[\"#{opts.frameName}\"]"
+        delete_on_done: true
+      )
 
-  prepareArrayForPost = (obj, key) ->
-    data = $.map obj[key], (item, index) ->
+  prepareArrayForPost = (arr) ->
+    data = $.map arr, (item, index) ->
       "\"#{item}\""
     data = data.join(',')
-    "[#{data}]"
+    return "[#{data}]"
 
   guessParseParams = (frameName) ->
-    $.ajax
+    return $.ajax
       url: 'http://139.59.249.87/3/ParseSetup'
       method: 'post'
       data:
         source_frames: "[\"#{frameName}\"]"
+        check_header: 1
+
+  getTrainingFrame = () ->
+    modelName = $('select.models-list').val()
+    promise = $.Deferred()
+    $.ajax(
+      url: "http://139.59.249.87/3/Models/#{modelName}"
+      method: 'get'
+      success: (response) ->
+        trainingFrameURL = response.models[0].data_frame.URL
+        $.ajax(
+          url: "http://139.59.249.87#{trainingFrameURL}"
+          method: 'get'
+          success: (response) ->
+            promise.resolve(response)
+        )
+    )
+    return promise
 
   # public
   get_id = () ->

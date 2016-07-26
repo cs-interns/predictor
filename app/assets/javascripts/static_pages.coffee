@@ -59,7 +59,7 @@ $(document).ready ->
       arr2 = []
       for line in arr
         arr2.push line.split(",")
-      dataTable = $('<table></table>')
+      dataTable = $('<table>', {id: 'preview-table'})
       tableHead = $('<thead></thead>')
       tableBody = $('<tbody></tbody>')
       for lines in arr2
@@ -95,7 +95,11 @@ $(document).ready ->
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
+<<<<<<< HEAD
     exclude_model_fields = ['models/data_frame', #'models/algo',
+=======
+    exclude_model_fields = ['models/data_frame', # 'models/algo',
+>>>>>>> master
     'models/response_column_name', 'models/output/domains',
     'models/output/cross_validation_models'] # , 'models/output/model_summary',
     # 'models/output/scoring_history']
