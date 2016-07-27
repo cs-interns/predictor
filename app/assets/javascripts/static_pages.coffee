@@ -91,6 +91,7 @@ $(document).ready ->
       $('.models-list').append(modelElements)
       $('select').material_select()
       $('#loading').hide()
+
   retrieveModels()
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
@@ -130,6 +131,15 @@ $(document).ready ->
           $('.data-label').show()
           $('.upload-div').show()
           $('.data-div').html('<h6>No Data To Preview</h6>').addClass('center').fadeIn()
+          $('.result-label').hide()
+          $('.confidence-rate-label').hide()
+          $('.model-rate-label').hide()
+          $('.show-button').hide()
+
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
         $('.table-div').html('<h5>No Columns Found</h5>').addClass('center').fadeIn()
+        $('.result-label').hide()
+        $('.confidence-rate-label').hide()
+        $('.model-rate-label').hide()
+        $('.show-button').hide()
