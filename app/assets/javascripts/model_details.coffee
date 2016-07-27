@@ -15,19 +15,15 @@ ModelDetails = (() ->
     dom.append $('<p>').text "Schema: #{model.output.__meta.schema_name}"
 
     output = model.output
-
-    dom.append $('<p>').text "Model Category: #{output.model_category}"
-
-    # not yet implemented. Depends on the algorithm used
-    console.log "Training Metrics: #{output.training_metrics}"
-    console.log "Validation Metrics: #{output.cross_validation_metrics}"
-
     summary = output.model_summary
     sum_cols = summary.columns
     sum_data = summary.data
 
-    # show description of model summary
-    dom.append $('<h5>').text "Model Summary #{summary.description}"
+    dom.append $("<h4><b>Details for #{model.model_id.name} model</b></h4>")
+    if summary.description
+      dom.append $("<p>#{summary.name} (#{summary.description})<p>".toUpperCase())
+    else
+      dom.append $("<p>#{summary.name}</p>".toUpperCase())
 
     tbl = $('<table>')
     tbl.addClass("responsive-table striped")
@@ -36,11 +32,11 @@ ModelDetails = (() ->
 
     column_name = []
     for col, c in sum_cols
-     unless c is 0
-       column_name.push col.description
-       td = $('<td>')
-       td.html("#{col.description}")
-       tr.append(td)
+      unless c is 0
+        column_name.push col.description
+        td = $('<td>')
+        td.html("#{col.description}")
+        tr.append(td)
     tbdy.append(tr)
     for row, r in sum_data
       row_data = []
@@ -59,16 +55,37 @@ ModelDetails = (() ->
             td.html("#{sum_data[c][r]}")
             trr.append(td)
       tbdy.append(trr)
-
     tbl.append(tbdy)
     dom.append(tbl)
+
+    #more parameters
+    dom.append $("<p>
+      <b>Algorithm used:</b> #{model.algo_full_name}<br>
+      <b>Schema:</b> #{model.output.__meta.schema_name}<br>
+      <b>Model Category:</b> #{output.model_category}
+    </p>")
+
+    # show confusion matrix
+    if model.algo is "drf" or model.algo is "deeplearning"
+      unless output.training_metrics is null
+        training_cm = output.training_metrics.cm.table
+        showConfusionMatrix("Training Metrics",training_cm,dom)
+        dom.append $('<br>')
+      unless output.validation_metrics is null
+        validation_cm = output.validation_metrics.cm.table
+        showConfusionMatrix("Validation Metrics",validation_cm,dom)
+        dom.append $('<br>')
+      unless output.cross_validation_metrics is null
+        cross_validation_cm = output.cross_validation_metrics.cm.table
+        showConfusionMatrix("Cross Validation Metrics",cross_validation_cm,dom)
+        dom.append $('<br>')
+
     plotXYscoringHistory('logloss-div', 4, 9, 13) if model.algo is 'deeplearning'
     plotXYscoringHistory('mse-div', 4, 7, 11) if model.algo is 'deeplearning'
     plotXYscoringHistory('drf-logloss-div', 3, 5, 11) if model.algo is 'drf'
     plotXYscoringHistory('drf-mse-div', 3, 4, 11) if model.algo is 'drf'
     plotHorizBarChart(model.output.variable_importances, 'drf-mse-div', 0, 2) if model.algo is 'drf'
     plotStandardCoefRatio() if model.algo is 'glm'
-
 
   plotStandardCoefRatio = () ->
     bardiv = $('<div>')
@@ -185,6 +202,38 @@ ModelDetails = (() ->
     }
 
     Plotly.newPlot(div_id, variable_dataset, variable_layout)
+
+  showConfusionMatrix = (title,cm,dom)->
+    cm_col = cm.columns
+    cm_data = cm.data
+
+    dom.append $('<h5>').text "#{title}"+ " - " +"#{cm.name}"
+    trainingCmTable = $('<table>')
+    trainingCmTable.addClass("responsive-table striped")
+    trainingCmHeaders = $('<thead>')
+    trainingCmBody = $('<tbody>')
+    rowHead = cm_col.slice(0,-2)
+    bufferRowHead = {description:"Total"}
+    rowHead.push bufferRowHead
+    cm_data.unshift rowHead
+    bufferCol = {description:" "}
+    cm_col.unshift(bufferCol)
+    for col in cm_col
+      trainingCmHeaders.append("<th>#{col.description}</th>")
+    trainingCmHeaders.appendTo(trainingCmTable)
+    for data, r in cm_data[0]
+      trainingCmRow = $('<tr>')
+      for cols, c in cm_data
+        if c is 0
+          trainingCmRow.append("<td><b>#{cols[r].description}</b></td>")
+        else if c-1 == r
+          trainingCmRow.append("<td class = 'yellow'>#{cols[r]}</td>")
+        else
+          trainingCmRow.append("<td>#{cols[r]}</td>")
+      trainingCmRow.appendTo(trainingCmBody)
+    trainingCmTable.append(trainingCmBody)
+
+    dom.append(trainingCmTable)
 
 
   return {
