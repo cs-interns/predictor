@@ -104,40 +104,58 @@ $(document).ready ->
             if param.name == 'training_frame'
               return param.actual_value.name
         )()
-        dataTable = $('<table></table>')
-        try
-          $('.table-div').show()
-          dataPoints = $('<thead></thead>')
-          columns = $.map res.models[0].output.names, (col, i) ->
-            $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
-            dataPoints
-          row = $('<tr>')
-          for x in [0...columns.length - 1]
-            row.append($('<td>', {html: $('<input>', {type: 'text'})}))
-          dataTable.addClass('responsive-table striped view-data').append(columns).append(row)
-          $('.table-div').html(dataTable).fadeIn()
-          $.ModelDetails.showModelDetail res.models[0], $('#modal1')
-        catch e
-          $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
-        finally
-          $('#loading').hide()
-          $('#model-specs').fadeIn('slow')
-          $('.feature-label').show()
-          $('.data-label').show()
-          $('.upload-div').show()
-          $('.data-div').html('<h6>No Data To Preview</h6>').addClass('center').fadeIn()
-          $('.result-label').hide()
-          $('.confidence-rate-label').hide()
-          $('.model-rate-label').hide()
-          $('.show-button').hide()
 
-          #DISPLAY RESPONSE COLUMN NAME EVERY CHANGE OF MODEL
-          $.ajax
-            url: "http://139.59.249.87/3/Models/#{model_name}"
-            method: 'get'
-            success: (res_col) ->
-              response_column = res_col.models[0].response_column_name
-              $('.predict-col').html(response_column)
+        $.ajax
+          url: "#{url}/3/Frames/#{trainingFrame}"
+          method: 'get'
+          success: (trainingResponse) -> 
+            columns = trainingResponse.frames[0].columns
+            dataTable = $('<table></table>')
+            try
+              $('.table-div').show()
+              dataPoints = $('<thead></thead>')
+              $.each res.models[0].output.names, (i, col) ->
+                $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
+              row = $('<tr>')
+              $.each dataPoints.children(), (i, col) ->
+                columnName = $(col).html()
+                $.each columns, (i, col) ->
+                  if col.label == columnName
+                    if col.type == 'enum'
+                      choices = $.map col.domain, (choice, i) ->
+                        $('<option>', {value: choice, text: choice})
+                      choices.unshift($('<option>', {value: '', text: ''}))
+                      field = $('<select>', html: choices)
+                    else
+                      field = $('<input>')
+                    row.append($('<td>', {html: field}))
+                    return false
+              dataTable.addClass('responsive-table striped view-data').append(dataPoints).append(row)
+              $('.table-div').html(dataTable).fadeIn()
+              $('select').material_select()
+              $.ModelDetails.showModelDetail res.models[0], $('#modal1')
+            catch e
+              console.log(e)
+              $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
+            finally
+              $('#loading').hide()
+              $('#model-specs').fadeIn('slow')
+              $('.feature-label').show()
+              $('.data-label').show()
+              $('.upload-div').show()
+              $('.data-div').html('<h6>No Data To Preview</h6>').addClass('center').fadeIn()
+              $('.result-label').hide()
+              $('.confidence-rate-label').hide()
+              $('.model-rate-label').hide()
+              $('.show-button').hide()
+    
+              #DISPLAY RESPONSE COLUMN NAME EVERY CHANGE OF MODEL
+              $.ajax
+                url: "http://139.59.249.87/3/Models/#{model_name}"
+                method: 'get'
+                success: (res_col) ->
+                  response_column = res_col.models[0].response_column_name
+                  $('.predict-col').html(response_column)
 
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
