@@ -6,7 +6,6 @@ ModelDetails = (() ->
     model = the_model
     dom = domy.children().first()
     view = dom
-    console.log model
     ###################### MODEL SUMMARY ######################
     dom.empty()
 
