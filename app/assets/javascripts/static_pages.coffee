@@ -36,7 +36,6 @@ $(document).ready ->
 
   $('.upload-file').change ->
     file = this.files[0]
-    console.log file
     # try
     reader = new FileReader()
     #preview first 10 only
@@ -67,11 +66,8 @@ $(document).ready ->
       $('.data-label').show()
       $('#predict').show()
       # $('.table-div').find('table').html tableBody
-      console.log arr2
-    # catch error
-    #   console.log "naay error"
 
-
+  #GET MODELS FROM H2O
   retrieveModels = ->
     $.getJSON url + '/3/Models', (result) ->
       modelElements = $.map result.models, (model, i) ->
@@ -82,8 +78,9 @@ $(document).ready ->
       $('.models-list').append(modelElements)
       $('select').material_select()
       $('#loading').hide()
-
   retrieveModels()
+
+  #DISPLAY FEATURES OF MODEL EVERY CHANGE
   $('.models-list').on 'change', (e) ->
     e.preventDefault()
     key = $(@).val()
@@ -100,11 +97,10 @@ $(document).ready ->
         $('#loading').show()
         $('.table-div').hide()
       success: (res) ->
-        model = res.models[0].output.names
+        model_name = res.models[0].model_id.name
         dataTable = $('<table></table>')
         try
           $('.table-div').show()
-          # console.log(model)
           dataPoints = $('<thead></thead>')
           columns = $.map res.models[0].output.names, (col, i) ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
@@ -113,7 +109,6 @@ $(document).ready ->
           $('.table-div').html(dataTable).fadeIn()
           $.ModelDetails.showModelDetail res.models[0], $('#modal1')
         catch e
-          console.log e
           $('.table-div').html('<h6>No Columns Found</h6>').addClass('center').fadeIn()
         finally
           $('#loading').hide()
@@ -126,6 +121,14 @@ $(document).ready ->
           $('.confidence-rate-label').hide()
           $('.model-rate-label').hide()
           $('.show-button').hide()
+
+          #DISPLAY RESPONSE COLUMN NAME EVERY CHANGE OF MODEL
+          $.ajax
+            url: "http://139.59.249.87/3/Models/#{model_name}"
+            method: 'get'
+            success: (res_col) ->
+              response_column = res_col.models[0].response_column_name
+              $('.predict-col').html(response_column)
 
       error: (xhr, status, error_thrown) ->
         $('#loading').hide()
