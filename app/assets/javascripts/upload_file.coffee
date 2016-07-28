@@ -10,6 +10,8 @@ Upload = (() ->
       if $(e.target).siblings('input')[0].files.length == 0
         return false
       id = 0  # clear id, new file upload
+      columnNames = []
+      columnTypes = []
       uploadPromise = uploadFile()
       framePromise = getTrainingFrame()
       $.when(uploadPromise, framePromise).then((uploadResponse, frameResponse) ->
