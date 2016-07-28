@@ -98,6 +98,12 @@ $(document).ready ->
         $('.table-div').hide()
       success: (res) ->
         model_name = res.models[0].model_id.name
+        trainingFrame = (() ->
+          modelParams = res.models[0].parameters
+          for param in modelParams
+            if param.name == 'training_frame'
+              return param.actual_value.name
+        )()
         dataTable = $('<table></table>')
         try
           $('.table-div').show()
@@ -105,7 +111,10 @@ $(document).ready ->
           columns = $.map res.models[0].output.names, (col, i) ->
             $("<th>#{col}</th>").attr({'id': "#{col}"}).appendTo(dataPoints)
             dataPoints
-          dataTable.addClass('responsive-table striped view-data').append columns
+          row = $('<tr>')
+          for x in [0...columns.length - 1]
+            row.append($('<td>', {html: $('<input>', {type: 'text'})}))
+          dataTable.addClass('responsive-table striped view-data').append(columns).append(row)
           $('.table-div').html(dataTable).fadeIn()
           $.ModelDetails.showModelDetail res.models[0], $('#modal1')
         catch e
