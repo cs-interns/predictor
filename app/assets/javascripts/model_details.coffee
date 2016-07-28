@@ -19,6 +19,15 @@ ModelDetails = (() ->
     sum_data = summary.data
 
     dom.append $("<h4><b>Details for #{model.model_id.name} model</b></h4>")
+    
+    #PARAMETERS
+    dom.append $("<p>
+      <b>Algorithm used:</b> #{model.algo_full_name}<br>
+      <b>Schema:</b> #{model.output.__meta.schema_name}<br>
+      <b>Model Category:</b> #{output.model_category}
+    </p>")
+
+    #MODEL DESCRIPTION SUMMARY
     if summary.description
       dom.append $("<p>#{summary.name} (#{summary.description})<p>".toUpperCase())
     else
@@ -56,13 +65,6 @@ ModelDetails = (() ->
       tbdy.append(trr)
     tbl.append(tbdy)
     dom.append(tbl)
-
-    #more parameters
-    dom.append $("<p>
-      <b>Algorithm used:</b> #{model.algo_full_name}<br>
-      <b>Schema:</b> #{model.output.__meta.schema_name}<br>
-      <b>Model Category:</b> #{output.model_category}
-    </p>")
 
     # show confusion matrix
     if model.algo is "drf" or model.algo is "deeplearning"
