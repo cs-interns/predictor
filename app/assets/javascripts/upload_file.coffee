@@ -5,34 +5,54 @@ Upload = (() ->
   columnNames = []
   columnTypes = []
 
+  prepareTable = () ->
+    headers = $('.view-data thead th').map (i, head) ->
+      $(head).html()
+    values = $('.view-data tbody tr').children().map (i, td) ->
+      $(td).find('input').val()
+    string = [$.makeArray(headers).join(','), $.makeArray(values).join(',')].join('\r\n')
+    return new Blob([string], {type: 'text/csv'})
 
   uploadAndPredict = (e) ->
+      data = 0
       if $(e.target).siblings('input')[0].files.length == 0
-        return false
+        # no file chosen, use manual input
+        data = prepareTable()
       id = 0  # clear id, new file upload
       columnNames = []
       columnTypes = []
-      uploadPromise = uploadFile()
+      uploadPromise = uploadFile(data)
       framePromise = getTrainingFrame()
-      $.when(uploadPromise, framePromise).then((uploadResponse, frameResponse) ->
-        uploadedColumnNames = $.map($('#preview-table thead').children(), (td, i) ->
+      $.when(uploadPromise, framePromise).then (uploadResponse, frameResponse) ->
+
+        if data
+          headerObjects = $('.view-data thead th')
+        else
+          headerObjects = $$('#preview-table thead').children()
+
+        uploadedColumnNames = $.map headerObjects, (td, i) ->
           return td.innerHTML
-        )
+
         trainingColumns = frameResponse.frames[0].columns
-        columns = $.map(trainingColumns, (trainingColumn, i) ->
+
+        columns = $.map trainingColumns, (trainingColumn, i) ->
           if $.inArray(trainingColumn.label, uploadedColumnNames) >= 0
             return {name: trainingColumn.label, type: trainingColumn.type}
-        )
-        $.each(columns, (i, column) ->
+
+        $.each columns, (i, column) ->
           columnNames.push(column.name)
           columnTypes.push(column.type)
-        )
+
         parseFrame(get_id())
-      )
+
       return false
 
-  uploadFile = () ->
-    fd = new FormData($('form')[0])
+  uploadFile = (data) ->
+    if data
+      fd = new FormData()
+      fd.append('file', data)
+    else
+      fd = new FormData($('form')[0])
     return $.ajax
       url: "http://139.59.249.87/3/PostFile?destination_frame=#{encodeURIComponent(get_id())}"
       data: fd
