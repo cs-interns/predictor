@@ -9,10 +9,6 @@ ModelDetails = (() ->
     ###################### MODEL SUMMARY ######################
     dom.empty()
 
-    dom.append $('<h4>').html "<b>Model ID:</b> #{model.model_id.name}"
-    dom.append $('<p>').text "Algorithm used: #{model.algo_full_name}"
-    dom.append $('<p>').text "Schema: #{model.output.__meta.schema_name}"
-
     output = model.output
     summary = output.model_summary
     sum_cols = summary.columns
