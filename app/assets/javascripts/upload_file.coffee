@@ -28,7 +28,7 @@ Upload = (() ->
         if data
           headerObjects = $('.view-data thead th')
         else
-          headerObjects = $$('#preview-table thead').children()
+          headerObjects = $('#preview-table thead').children()
 
         uploadedColumnNames = $.map headerObjects, (td, i) ->
           return td.innerHTML
