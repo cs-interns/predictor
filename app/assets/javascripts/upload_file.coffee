@@ -34,10 +34,13 @@ Upload = (() ->
           return td.innerHTML
 
         trainingColumns = frameResponse.frames[0].columns
+        trainingColumnNames = $.map trainingColumns, (col, i) ->
+          return col.label
 
-        columns = $.map trainingColumns, (trainingColumn, i) ->
-          if $.inArray(trainingColumn.label, uploadedColumnNames) >= 0
-            return {name: trainingColumn.label, type: trainingColumn.type}
+        columns = $.map uploadedColumnNames, (uploadedColumnName, i) ->
+          index = $.inArray uploadedColumnName, trainingColumnNames
+          if index >= 0
+            return {name: trainingColumns[index].label, type: trainingColumns[index].type}
 
         $.each columns, (i, column) ->
           columnNames.push(column.name)
